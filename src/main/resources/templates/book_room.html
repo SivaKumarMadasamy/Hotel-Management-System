@@ -40,7 +40,7 @@
                 <option value="" disabled selected>-- Select a Room --</option>
                 <th:block th:each="room : ${available_rooms}">
                 <option value="[[${room.id}]]" data-price="[[${room.price}]]">
-                    Room [[${room.room_number}]] - [[${room.room_type}]] ($[[${"%.2f"|format(room.price)}]]/night)
+                    Room [[${room.room_number}]] - [[${room.room_type}]] ($[[${#numbers.formatDecimal(room.price, 1, 2)}]]/night)
                 </option>
                 </th:block>
             </select>

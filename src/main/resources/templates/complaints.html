@@ -35,7 +35,7 @@
                 </span>
             </td>
             <td>
-                <form th:action="@{/update_complaint/{id}(id=complaint.id)}" method="POST">
+                <form th:action="@{/update_complaint/{id}(id=${complaint.id})}" method="POST">
                     <select name="status" onchange="this.form.submit()" class="status-select">
                         <option value="Pending" <th:block th:if="${complaint.status == 'Pending'}">selected</th:block>>Pending</option>
                         <option value="In Progress" <th:block th:if="${complaint.status == 'In Progress'}">selected</th:block>>In Progress</option>

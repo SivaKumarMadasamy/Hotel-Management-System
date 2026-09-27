@@ -6,7 +6,7 @@
 <div layout:fragment="content">
 <div class="form-container">
     <h2>Edit Room - [[${room.room_number}]]</h2>
-    <form th:action="@{/edit_room/{id}(id=room.id)}" method="POST">
+    <form th:action="@{/edit_room/{id}(id=${room.id})}" method="POST">
         <div class="form-group">
             <label for="room_number">Room Number</label>
             <input type="text" id="room_number" name="room_number" value="[[${room.room_number}]]" required>

@@ -31,15 +31,15 @@
             <td>[[${booking.rooms.get('room_number')}]] ([[${booking.rooms.get('room_type')}]])</td>
             <td>[[${booking.check_in}]]</td>
             <td>[[${booking.check_out}]]</td>
-            <td>$[[${"%.2f"|format(booking.total_price)}]]</td>
+            <td>$[[${#numbers.formatDecimal(booking.total_price, 1, 2)}]]</td>
             <td>
-                <span th:class="${booking.status == \'Active\' ? \'badge badge-success\' : \'badge badge-secondary\'}">
+                <span th:class="${booking.status == 'Active' ? 'badge badge-success' : 'badge badge-secondary'}">
                     [[${booking.status}]]
                 </span>
             </td>
             <td>
                 <th:block th:if="${booking.status == 'Active'}">
-                <form th:action="@{/cancel_booking/{id}(id=booking.id)}" method="POST" style="display: inline;" onsubmit="return confirm('Cancel this booking? Room will be made available again.');">
+                <form th:action="@{/cancel_booking/{id}(id=${booking.id})}" method="POST" style="display: inline;" onsubmit="return confirm('Cancel this booking? Room will be made available again.');">
                     <button type="submit" class="btn-small btn-danger">Cancel</button>
                 </form>
                 
