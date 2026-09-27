@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
+<head><title>Title</title></head>
+<body>
+
+<div layout:fragment="content">
+<div class="page-header">
+    <h2>Customer Complaints</h2>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Customer Name</th>
+            <th>Room #</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <th:block th:each="complaint : ${complaints}">
+        <tr>
+            <td>[[${complaint.created_at[:10]}]] [[${complaint.created_at[11:16]}]]</td>
+            <td>[[${complaint.customer_name}]]</td>
+            <td>[[${complaint.room_number}]]</td>
+            <td>[[${complaint.complaint}]]</td>
+            <td>
+                <span class="badge 
+                    <th:block th:if="${complaint.status == 'Pending'}">badge-danger
+                    
+                    badge-success</th:block>">
+                    [[${complaint.status}]]
+                </span>
+            </td>
+            <td>
+                <form th:action="@{/update_complaint/{id}(id=complaint.id)}" method="POST">
+                    <select name="status" onchange="this.form.submit()" class="status-select">
+                        <option value="Pending" <th:block th:if="${complaint.status == 'Pending'}">selected</th:block>>Pending</option>
+                        <option value="In Progress" <th:block th:if="${complaint.status == 'In Progress'}">selected</th:block>>In Progress</option>
+                        <option value="Resolved" <th:block th:if="${complaint.status == 'Resolved'}">selected</th:block>>Resolved</option>
+                    </select>
+                </form>
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan="6" class="text-center">No complaints filed.</td>
+        </tr>
+        </th:block>
+    </tbody>
+</table>
+</div>
+</body>
+</html>

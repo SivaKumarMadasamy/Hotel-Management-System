@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
+<head><title>Title</title></head>
+<body>
+
+<div layout:fragment="content">
+<div class="dashboard-header">
+    <h2>Admin Dashboard</h2>
+    <p>Overview of hotel operations</p>
+</div>
+
+<div class="dashboard-stats">
+    <div class="stat-card blue">
+        <i class="fas fa-door-open"></i>
+        <div class="stat-details">
+            <h3>Total Rooms</h3>
+            <p>[[${total_rooms}]]</p>
+        </div>
+    </div>
+    <div class="stat-card green">
+        <i class="fas fa-door-closed"></i>
+        <div class="stat-details">
+            <h3>Available</h3>
+            <p>[[${available_rooms}]]</p>
+        </div>
+    </div>
+    <div class="stat-card orange">
+        <i class="fas fa-bed"></i>
+        <div class="stat-details">
+            <h3>Booked</h3>
+            <p>[[${booked_rooms}]]</p>
+        </div>
+    </div>
+    <div class="stat-card purple">
+        <i class="fas fa-address-book"></i>
+        <div class="stat-details">
+            <h3>Total Bookings</h3>
+            <p>[[${total_bookings}]]</p>
+        </div>
+    </div>
+    <div class="stat-card red">
+        <i class="fas fa-exclamation-circle"></i>
+        <div class="stat-details">
+            <h3>Pending Complaints</h3>
+            <p>[[${pending_complaints}]]</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-actions">
+    <a th:href="@{/add_room}" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Room</a>
+    <a th:href="@{/book_room}" class="btn btn-success"><i class="fas fa-calendar-plus"></i> New Booking</a>
+</div>
+</div>
+</body>
+</html>

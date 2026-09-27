@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
+<head><title>Title</title></head>
+<body>
+
+<div layout:fragment="content">
+<div class="form-container">
+    <h2>Book a Room</h2>
+    <form th:action="@{/book_room}" method="POST" id="bookingForm">
+        <div class="form-group">
+            <label for="customer_name">Full Name</label>
+            <input type="text" id="customer_name" name="customer_name" value="[[${user_info.username if user_info else ''}]]" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" value="[[${user_info.email if user_info else ''}]]" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group half">
+                <label for="check_in">Check-in Date</label>
+                <input type="date" id="check_in" name="check_in" required onchange="calculatePrice()">
+            </div>
+            <div class="form-group half">
+                <label for="check_out">Check-out Date</label>
+                <input type="date" id="check_out" name="check_out" required onchange="calculatePrice()">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="room_id">Select Available Room</label>
+            <th:block th:if="${available_rooms}">
+            <select id="room_id" name="room_id" required onchange="calculatePrice()">
+                <option value="" disabled selected>-- Select a Room --</option>
+                <th:block th:each="room : ${available_rooms}">
+                <option value="[[${room.id}]]" data-price="[[${room.price}]]">
+                    Room [[${room.room_number}]] - [[${room.room_type}]] ($[[${"%.2f"|format(room.price)}]]/night)
+                </option>
+                </th:block>
+            </select>
+            
+            <div class="alert alert-warning">No rooms are currently available!</div>
+            </th:block>
+        </div>
+
+        <div class="price-estimate" id="price-estimate-box" style="display: none;">
+            <h4>Estimated Total: $<span id="calculated_price">0.00</span></h4>
+            <p><small>(<span id="days_count">0</span> nights)</small></p>
+        </div>
+        
+        <button type="submit" class="btn btn-success btn-block" id="submitBtn" <th:block th:if="${not available_rooms}">disabled</th:block>>Confirm Booking</button>
+    </form>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
+<head><title>Title</title></head>
+<body>
+
+<div layout:fragment="content">
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Welcome to Grand Hotel Management System</h1>
+        <p>A complete solution to manage rooms, bookings, and customer complaints efficiently.</p>
+        <div class="hero-buttons">
+            <a th:href="@{/book_room}" class="btn btn-primary">Book a Room</a>
+            <a th:href="@{/add_complaint}" class="btn btn-secondary">Submit Complaint</a>
+        </div>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="feature-card">
+        <i class="fas fa-bed fa-3x"></i>
+        <h3>Luxurious Rooms</h3>
+        <p>Manage all room types seamlessly.</p>
+    </div>
+    <div class="feature-card">
+        <i class="fas fa-calendar-check fa-3x"></i>
+        <h3>Easy Bookings</h3>
+        <p>Streamlined booking process for customers.</p>
+    </div>
+    <div class="feature-card">
+        <i class="fas fa-headset fa-3x"></i>
+        <h3>24/7 Support</h3>
+        <p>Efficiently handle and resolve customer issues.</p>
+    </div>
+</div>
+</div>
+</body>
+</html>

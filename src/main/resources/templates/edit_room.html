@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
+<head><title>Title</title></head>
+<body>
+
+<div layout:fragment="content">
+<div class="form-container">
+    <h2>Edit Room - [[${room.room_number}]]</h2>
+    <form th:action="@{/edit_room/{id}(id=room.id)}" method="POST">
+        <div class="form-group">
+            <label for="room_number">Room Number</label>
+            <input type="text" id="room_number" name="room_number" value="[[${room.room_number}]]" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="room_type">Room Type</label>
+            <select id="room_type" name="room_type" required>
+                <option value="Single" <th:block th:if="${room.room_type == 'Single'}">selected</th:block>>Single</option>
+                <option value="Double" <th:block th:if="${room.room_type == 'Double'}">selected</th:block>>Double</option>
+                <option value="Deluxe" <th:block th:if="${room.room_type == 'Deluxe'}">selected</th:block>>Deluxe</option>
+                <option value="Suite" <th:block th:if="${room.room_type == 'Suite'}">selected</th:block>>Suite</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="price">Price Per Night ($)</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" value="[[${room.price}]]" required>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+                <option value="Available" <th:block th:if="${room.status == 'Available'}">selected</th:block>>Available</option>
+                <option value="Booked" <th:block th:if="${room.status == 'Booked'}">selected</th:block>>Booked</option>
+                <option value="Maintenance" <th:block th:if="${room.status == 'Maintenance'}">selected</th:block>>Maintenance</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-warning">Update Room</button>
+        <a th:href="@{/rooms}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</div>
+</body>
+</html>

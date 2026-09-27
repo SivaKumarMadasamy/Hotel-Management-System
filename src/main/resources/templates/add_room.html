@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
+<head><title>Title</title></head>
+<body>
+
+<div layout:fragment="content">
+<div class="form-container">
+    <h2>Add New Room</h2>
+    <form th:action="@{/add_room}" method="POST">
+        <div class="form-group">
+            <label for="room_number">Room Number</label>
+            <input type="text" id="room_number" name="room_number" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="room_type">Room Type</label>
+            <select id="room_type" name="room_type" required>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+                <option value="Deluxe">Deluxe</option>
+                <option value="Suite">Suite</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="price">Price Per Night ($)</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Save Room</button>
+        <a th:href="@{/rooms}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</div>
+</body>
+</html>

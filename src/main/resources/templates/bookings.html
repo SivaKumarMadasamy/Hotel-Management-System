@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
+<head><title>Title</title></head>
+<body>
+
+<div layout:fragment="content">
+<div class="page-header">
+    <h2>Bookings Log</h2>
+    <a th:href="@{/book_room}" class="btn btn-primary">New Booking</a>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Room #</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <th:block th:each="booking : ${bookings}">
+        <tr>
+            <td>
+                [[${booking.customer_name}]]<br>
+                <small>[[${booking.phone}]]</small>
+            </td>
+            <td>[[${booking.rooms.get('room_number')}]] ([[${booking.rooms.get('room_type')}]])</td>
+            <td>[[${booking.check_in}]]</td>
+            <td>[[${booking.check_out}]]</td>
+            <td>$[[${"%.2f"|format(booking.total_price)}]]</td>
+            <td>
+                <span th:class="${booking.status == \'Active\' ? \'badge badge-success\' : \'badge badge-secondary\'}">
+                    [[${booking.status}]]
+                </span>
+            </td>
+            <td>
+                <th:block th:if="${booking.status == 'Active'}">
+                <form th:action="@{/cancel_booking/{id}(id=booking.id)}" method="POST" style="display: inline;" onsubmit="return confirm('Cancel this booking? Room will be made available again.');">
+                    <button type="submit" class="btn-small btn-danger">Cancel</button>
+                </form>
+                
+                <span class="text-muted">Cancelled</span>
+                </th:block>
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan="7" class="text-center">No bookings found.</td>
+        </tr>
+        </th:block>
+    </tbody>
+</table>
+</div>
+</body>
+</html>
