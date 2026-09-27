@@ -9,17 +9,17 @@
     <form th:action="@{/book_room}" method="POST" id="bookingForm">
         <div class="form-group">
             <label for="customer_name">Full Name</label>
-            <input type="text" id="customer_name" name="customer_name" value="[[${user_info.username if user_info else ''}]]" required>
+            <input type="text" id="customer_name" name="customer_name" th:value="${user_info != null ? user_info.username : ''}" required>
         </div>
         
         <div class="form-group">
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" required>
+            <input type="tel" id="phone" name="phone" th:value="${user_info != null ? user_info.phone : ''}" required>
         </div>
 
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" value="[[${user_info.email if user_info else ''}]]" required>
+            <input type="email" id="email" name="email" th:value="${user_info != null ? user_info.email : ''}" required>
         </div>
 
         <div class="form-row">
@@ -35,18 +35,15 @@
 
         <div class="form-group">
             <label for="room_id">Select Available Room</label>
-            <th:block th:if="${available_rooms}">
-            <select id="room_id" name="room_id" required onchange="calculatePrice()">
+            
+            <select th:if="${not #lists.isEmpty(available_rooms)}" id="room_id" name="room_id" required onchange="calculatePrice()">
                 <option value="" disabled selected>-- Select a Room --</option>
-                <th:block th:each="room : ${available_rooms}">
-                <option value="[[${room.id}]]" data-price="[[${room.price}]]">
+                <option th:each="room : ${available_rooms}" th:value="${room.id}" th:attr="data-price=${room.price}">
                     Room [[${room.room_number}]] - [[${room.room_type}]] ($[[${#numbers.formatDecimal(room.price, 1, 2)}]]/night)
                 </option>
-                </th:block>
             </select>
             
-            <div class="alert alert-warning">No rooms are currently available!</div>
-            </th:block>
+            <div th:if="${#lists.isEmpty(available_rooms)}" class="alert alert-warning">No rooms are currently available!</div>
         </div>
 
         <div class="price-estimate" id="price-estimate-box" style="display: none;">
@@ -54,7 +51,7 @@
             <p><small>(<span id="days_count">0</span> nights)</small></p>
         </div>
         
-        <button type="submit" class="btn btn-success btn-block" id="submitBtn" <th:block th:if="${not available_rooms}">disabled</th:block>>Confirm Booking</button>
+        <button type="submit" class="btn btn-success btn-block" id="submitBtn" th:disabled="${#lists.isEmpty(available_rooms)}">Confirm Booking</button>
     </form>
 </div>
 </div>
