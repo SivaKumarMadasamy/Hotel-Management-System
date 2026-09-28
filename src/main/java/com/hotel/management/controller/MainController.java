@@ -26,7 +26,8 @@ public class MainController {
     @GetMapping("/")
     public String index(HttpSession session) {
         if (isLoggedIn(session)) {
-            return "redirect:/dashboard";
+            if ("admin".equals(session.getAttribute("role"))) return "redirect:/dashboard";
+            return "redirect:/rooms";
         }
         return "redirect:/login";
     }
@@ -34,6 +35,7 @@ public class MainController {
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model, RedirectAttributes redirect) {
         if (!isLoggedIn(session)) return "redirect:/login";
+        if (!"admin".equals(session.getAttribute("role"))) return "redirect:/";
         
         try {
             List<Map<String, Object>> rooms = supabase.select("rooms", null, null, false);

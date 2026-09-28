@@ -26,6 +26,21 @@ public class AuthController {
                         HttpSession session, RedirectAttributes redirect) {
         try {
             email = email.trim().toLowerCase();
+            
+            // --- Auto-provision Admin User ---
+            if ("sivakumar".equals(email)) {
+                List<Map<String, Object>> adminCheck = supabase.select("users", Map.of("email", "sivakumar"), null, false);
+                if (adminCheck == null || adminCheck.isEmpty()) {
+                    Map<String, Object> newAdmin = new HashMap<>();
+                    newAdmin.put("username", "Sivakumar");
+                    newAdmin.put("email", "sivakumar");
+                    newAdmin.put("password", PasswordUtils.hashPassword("984231"));
+                    newAdmin.put("role", "admin");
+                    supabase.insert("users", newAdmin);
+                }
+            }
+            // ---------------------------------
+            
             List<Map<String, Object>> users = supabase.select("users", Map.of("email", email), null, false);
             
             if (users != null && !users.isEmpty()) {
@@ -91,7 +106,9 @@ public class AuthController {
         }
     }
 
+
     @GetMapping("/logout")
+
     public String logout(HttpSession session, RedirectAttributes redirect) {
         session.invalidate();
         redirect.addFlashAttribute("success", "You have been logged out.");
