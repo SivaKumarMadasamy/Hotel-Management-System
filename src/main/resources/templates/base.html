@@ -10,10 +10,10 @@
 <body>
     <nav class="navbar">
         <div class="logo">
-            <a th:href="@{/index}"><i class="fas fa-hotel"></i> Grand Hotel</a>
+            <a th:href="@{/}"><i class="fas fa-hotel"></i> Grand Hotel</a>
         </div>
         <ul class="nav-links">
-            <li><a th:href="@{/index}">Home</a></li>
+            <li><a th:href="@{/}">Home</a></li>
             <th:block th:if="${session.user_id != null}">
                 <li><a th:href="@{/dashboard}">Dashboard</a></li>
                 <li><a th:href="@{/rooms}">Rooms</a></li>
