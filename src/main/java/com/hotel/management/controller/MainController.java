@@ -25,11 +25,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index(HttpSession session) {
-        if (isLoggedIn(session)) {
-            if ("admin".equals(session.getAttribute("role"))) return "redirect:/dashboard";
-            return "redirect:/rooms";
-        }
-        return "redirect:/login";
+        return "index";
     }
 
     @GetMapping("/dashboard")
@@ -49,6 +45,7 @@ public class MainController {
             List<Map<String, Object>> bookings = supabase.select("bookings", null, null, false);
             List<Map<String, Object>> complaints = supabase.select("complaints", Map.of("status", "Pending"), null, false);
             
+            model.addAttribute("total_rooms", rooms != null ? rooms.size() : 0);
             model.addAttribute("available_rooms", availableRooms);
             model.addAttribute("booked_rooms", bookedRooms);
             model.addAttribute("total_bookings", bookings.size());
