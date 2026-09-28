@@ -225,7 +225,7 @@ public class MainController {
             supabase.insert("bookings", booking);
             supabase.update("rooms", "id", room_id, Map.of("status", "Booked"));
             
-            redirect.addFlashAttribute("success", String.format("Room booked successfully! Total price: ₹%.2f", totalPrice));
+            redirect.addFlashAttribute("success", String.format("Room booked successfully! Total price: Rs.%.2f", totalPrice));
             return "redirect:/dashboard";
         } catch (Exception e) {
             redirect.addFlashAttribute("danger", "Error booking room: " + e.getMessage());

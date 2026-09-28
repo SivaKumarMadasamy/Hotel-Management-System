@@ -24,7 +24,7 @@
         <tr>
             <td>[[${room.room_number}]]</td>
             <td>[[${room.room_type}]]</td>
-            <td>₹[[${#numbers.formatDecimal(room.price, 1, 2)}]]</td>
+            <td>Rs.[[${#numbers.formatDecimal(room.price, 1, 2)}]]</td>
             <td>
                 <span th:class="${room.status == 'Available' ? 'badge badge-success' : 'badge badge-danger'}">
                     [[${room.status}]]

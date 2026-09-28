@@ -39,7 +39,7 @@
             <select th:if="${not #lists.isEmpty(available_rooms)}" id="room_id" name="room_id" required onchange="calculatePrice()">
                 <option value="" disabled selected>-- Select a Room --</option>
                 <option th:each="room : ${available_rooms}" th:value="${room.id}" th:attr="data-price=${room.price}">
-                    Room [[${room.room_number}]] - [[${room.room_type}]] (₹[[${#numbers.formatDecimal(room.price, 1, 2)}]]/night)
+                    Room [[${room.room_number}]] - [[${room.room_type}]] (Rs.[[${#numbers.formatDecimal(room.price, 1, 2)}]]/night)
                 </option>
             </select>
             
@@ -47,7 +47,7 @@
         </div>
 
         <div class="price-estimate" id="price-estimate-box" style="display: none;">
-            <h4>Estimated Total: ₹<span id="calculated_price">0.00</span></h4>
+            <h4>Estimated Total: Rs.<span id="calculated_price">0.00</span></h4>
             <p><small>(<span id="days_count">0</span> nights)</small></p>
         </div>
         
