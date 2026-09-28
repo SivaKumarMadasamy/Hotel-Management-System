@@ -15,7 +15,7 @@
         <ul class="nav-links">
             <li><a th:href="@{/}">Home</a></li>
             <th:block th:if="${session.user_id != null}">
-                <li><a th:href="@{/dashboard}">Dashboard</a></li>
+                
                 <li><a th:href="@{/rooms}">Rooms</a></li>
                 <li><a th:href="@{/bookings}">Bookings</a></li>
                 <li><a th:href="@{/complaints}">Complaints</a></li>

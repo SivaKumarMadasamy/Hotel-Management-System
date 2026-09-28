@@ -22,33 +22,34 @@
     <tbody>
         <th:block th:each="complaint : ${complaints}">
         <tr>
-            <td>[[${complaint.created_at[:10]}]] [[${complaint.created_at[11:16]}]]</td>
+            <td>
+                <!-- Substring safely assuming standard ISO format e.g. 2026-09-27T10:15:30 -->
+                <span th:text="${complaint.created_at != null and complaint.created_at.length() >= 10 ? #strings.substring(complaint.created_at, 0, 10) : ''}"></span>
+                <span th:text="${complaint.created_at != null and complaint.created_at.length() >= 16 ? #strings.substring(complaint.created_at, 11, 16) : ''}"></span>
+            </td>
             <td>[[${complaint.customer_name}]]</td>
             <td>[[${complaint.room_number}]]</td>
             <td>[[${complaint.complaint}]]</td>
             <td>
-                <span class="badge 
-                    <th:block th:if="${complaint.status == 'Pending'}">badge-danger
-                    
-                    badge-success</th:block>">
+                <span th:class="${complaint.status == 'Pending' ? 'badge badge-danger' : (complaint.status == 'In Progress' ? 'badge badge-warning' : 'badge badge-success')}">
                     [[${complaint.status}]]
                 </span>
             </td>
             <td>
                 <form th:action="@{/update_complaint/{id}(id=${complaint.id})}" method="POST">
                     <select name="status" onchange="this.form.submit()" class="status-select">
-                        <option value="Pending" <th:block th:if="${complaint.status == 'Pending'}">selected</th:block>>Pending</option>
-                        <option value="In Progress" <th:block th:if="${complaint.status == 'In Progress'}">selected</th:block>>In Progress</option>
-                        <option value="Resolved" <th:block th:if="${complaint.status == 'Resolved'}">selected</th:block>>Resolved</option>
+                        <option value="Pending" th:selected="${complaint.status == 'Pending'}">Pending</option>
+                        <option value="In Progress" th:selected="${complaint.status == 'In Progress'}">In Progress</option>
+                        <option value="Resolved" th:selected="${complaint.status == 'Resolved'}">Resolved</option>
                     </select>
                 </form>
             </td>
         </tr>
+        </th:block>
         
-        <tr>
+        <tr th:if="${#lists.isEmpty(complaints)}">
             <td colspan="6" class="text-center">No complaints filed.</td>
         </tr>
-        </th:block>
     </tbody>
 </table>
 </div>
