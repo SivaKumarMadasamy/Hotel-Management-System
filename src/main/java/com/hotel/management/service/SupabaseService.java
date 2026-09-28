@@ -18,7 +18,7 @@ public class SupabaseService {
     public SupabaseService(Dotenv dotenv) {
         this.supabaseUrl = dotenv.get("SUPABASE_URL");
         this.supabaseKey = dotenv.get("SUPABASE_PUBLISHABLE_KEY");
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = new RestTemplate(new org.springframework.http.client.JdkClientHttpRequestFactory());
     }
 
     private HttpHeaders getHeaders() {

@@ -15,24 +15,24 @@
         <div class="form-group">
             <label for="room_type">Room Type</label>
             <select id="room_type" name="room_type" required>
-                <option value="Single" <th:block th:if="${room.room_type == 'Single'}">selected</th:block>>Single</option>
-                <option value="Double" <th:block th:if="${room.room_type == 'Double'}">selected</th:block>>Double</option>
-                <option value="Deluxe" <th:block th:if="${room.room_type == 'Deluxe'}">selected</th:block>>Deluxe</option>
-                <option value="Suite" <th:block th:if="${room.room_type == 'Suite'}">selected</th:block>>Suite</option>
+                <option value="Single" th:selected="${room.room_type == \'Single\'}">Single</option>
+                <option value="Double" th:selected="${room.room_type == \'Double\'}">Double</option>
+                <option value="Deluxe" th:selected="${room.room_type == \'Deluxe\'}">Deluxe</option>
+                <option value="Suite" th:selected="${room.room_type == \'Suite\'}">Suite</option>
             </select>
         </div>
         
         <div class="form-group">
-            <label for="price">Price Per Night ($)</label>
+            <label for="price">Price Per Night (₹)</label>
             <input type="number" id="price" name="price" step="0.01" min="0" value="[[${room.price}]]" required>
         </div>
 
         <div class="form-group">
             <label for="status">Status</label>
             <select id="status" name="status" required>
-                <option value="Available" <th:block th:if="${room.status == 'Available'}">selected</th:block>>Available</option>
-                <option value="Booked" <th:block th:if="${room.status == 'Booked'}">selected</th:block>>Booked</option>
-                <option value="Maintenance" <th:block th:if="${room.status == 'Maintenance'}">selected</th:block>>Maintenance</option>
+                <option value="Available" th:selected="${room.status == \'Available\'}">Available</option>
+                <option value="Booked" th:selected="${room.status == \'Booked\'}">Booked</option>
+                <option value="Maintenance" th:selected="${room.status == \'Maintenance\'}">Maintenance</option>
             </select>
         </div>
         

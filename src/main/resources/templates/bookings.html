@@ -31,7 +31,7 @@
             <td>[[${booking.rooms.get('room_number')}]] ([[${booking.rooms.get('room_type')}]])</td>
             <td>[[${booking.check_in}]]</td>
             <td>[[${booking.check_out}]]</td>
-            <td>$[[${#numbers.formatDecimal(booking.total_price, 1, 2)}]]</td>
+            <td>₹[[${#numbers.formatDecimal(booking.total_price, 1, 2)}]]</td>
             <td>
                 <span th:class="${booking.status == 'Active' ? 'badge badge-success' : 'badge badge-secondary'}">
                     [[${booking.status}]]
