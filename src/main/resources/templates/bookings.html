@@ -28,7 +28,7 @@
                 [[${booking.customer_name}]]<br>
                 <small>[[${booking.phone}]]</small>
             </td>
-            <td>[[${booking.rooms.get('room_number')}]] ([[${booking.rooms.get('room_type')}]])</td>
+            <td>[[${booking.rooms != null ? booking.rooms.get('room_number') : 'Deleted'}]] ([[${booking.rooms != null ? booking.rooms.get('room_type') : 'Unknown'}]])</td>
             <td>[[${booking.check_in}]]</td>
             <td>[[${booking.check_out}]]</td>
             <td>Rs.[[${#numbers.formatDecimal(booking.total_price, 1, 2)}]]</td>
@@ -42,16 +42,17 @@
                 <form th:action="@{/cancel_booking/{id}(id=${booking.id})}" method="POST" style="display: inline;" onsubmit="return confirm('Cancel this booking? Room will be made available again.');">
                     <button type="submit" class="btn-small btn-danger">Cancel</button>
                 </form>
-                
-                <span class="text-muted">Cancelled</span>
+                </th:block>
+                <th:block th:unless="${booking.status == 'Active'}">
+                <span class="text-muted">[[${booking.status}]]</span>
                 </th:block>
             </td>
         </tr>
+        </th:block>
         
-        <tr>
+        <tr th:if="${#lists.isEmpty(bookings)}">
             <td colspan="7" class="text-center">No bookings found.</td>
         </tr>
-        </th:block>
     </tbody>
 </table>
 </div>
