@@ -9,17 +9,17 @@
     <form th:action="@{/book_room}" method="POST" id="bookingForm">
         <div class="form-group">
             <label for="customer_name">Full Name</label>
-            <input type="text" id="customer_name" name="customer_name" th:value="${user_info != null ? user_info.username : ''}" required>
+            <input type="text" id="customer_name" name="customer_name" th:value="${user_info != null ? user_info.get('username') : ''}" required>
         </div>
         
         <div class="form-group">
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" th:value="${user_info != null ? user_info.phone : ''}" required>
+            <input type="tel" id="phone" name="phone" th:value="${user_info != null ? user_info.get('phone') : ''}" required>
         </div>
 
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" th:value="${user_info != null ? user_info.email : ''}" required>
+            <input type="email" id="email" name="email" th:value="${user_info != null ? user_info.get('email') : ''}" required>
         </div>
 
         <div class="form-row">
