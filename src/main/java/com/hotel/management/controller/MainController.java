@@ -256,6 +256,7 @@ public class MainController {
     @GetMapping("/complaints")
     public String complaints(HttpSession session, Model model) {
         if (!isLoggedIn(session)) return "redirect:/login";
+        if (!"admin".equals(session.getAttribute("role"))) return "redirect:/";
         model.addAttribute("complaints", supabase.select("complaints", null, "created_at", true));
         return "complaints";
     }
@@ -278,7 +279,7 @@ public class MainController {
             data.put("status", "Pending");
             supabase.insert("complaints", data);
             redirect.addFlashAttribute("success", "Complaint submitted successfully! We will look into it.");
-            return "redirect:/dashboard";
+            return "redirect:/rooms";
         } catch (Exception e) {
             redirect.addFlashAttribute("danger", "Error submitting complaint: " + e.getMessage());
             return "redirect:/add_complaint";
@@ -289,6 +290,7 @@ public class MainController {
     public String updateComplaint(@PathVariable int id, @RequestParam String status, 
                                   HttpSession session, RedirectAttributes redirect) {
         if (!isLoggedIn(session)) return "redirect:/login";
+        if (!"admin".equals(session.getAttribute("role"))) return "redirect:/";
         try {
             supabase.update("complaints", "id", id, Map.of("status", status));
             redirect.addFlashAttribute("success", "Complaint status updated!");

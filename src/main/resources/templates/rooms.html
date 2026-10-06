@@ -6,7 +6,9 @@
 <div layout:fragment="content">
 <div class="page-header">
     <h2>Manage Rooms</h2>
-    <a th:href="@{/add_room}" class="btn btn-primary">Add Room</a>
+    <th:block th:if="${session.role == 'admin'}">
+        <a th:href="@{/add_room}" class="btn btn-primary">Add Room</a>
+    </th:block>
 </div>
 
 <table class="data-table">
@@ -16,7 +18,7 @@
             <th>Type</th>
             <th>Price / Night</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th th:if="${session.role == 'admin'}">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -30,7 +32,7 @@
                     [[${room.status}]]
                 </span>
             </td>
-            <td class="action-buttons">
+            <td class="action-buttons" th:if="${session.role == 'admin'}">
                 <a th:href="@{/edit_room/{id}(id=${room.id})}" class="btn-small btn-warning"><i class="fas fa-edit"></i> Edit</a>
                 <form th:action="@{/delete_room/{id}(id=${room.id})}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this room?');">
                     <button type="submit" class="btn-small btn-danger"><i class="fas fa-trash"></i> Delete</button>

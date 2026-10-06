@@ -15,10 +15,12 @@
         <ul class="nav-links">
             <li><a th:href="@{/}">Home</a></li>
             <th:block th:if="${session.user_id != null}">
-                
+                <th:block th:if="${session.role == 'admin'}">
+                    <li><a th:href="@{/dashboard}">Admin Dashboard</a></li>
+                    <li><a th:href="@{/complaints}">Complaints</a></li>
+                </th:block>
                 <li><a th:href="@{/rooms}">Rooms</a></li>
                 <li><a th:href="@{/bookings}">Bookings</a></li>
-                <li><a th:href="@{/complaints}">Complaints</a></li>
                 <li><a th:href="@{/logout}" style="color: #ffcccc;">Logout ([[${session.username}]])</a></li>
             </th:block><th:block th:unless="${session.user_id != null}">
                 <li><a th:href="@{/login}">Login</a></li>
