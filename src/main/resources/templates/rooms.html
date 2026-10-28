@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
-<head><title>Title</title></head>
+<head><title>Grand Hotel — Rooms</title></head>
 <body>
 
 <div layout:fragment="content">
 <div class="page-header">
-    <h2>Manage Rooms</h2>
+    <h2><i class="fas fa-door-open" style="color:var(--gold); margin-right:0.5rem;"></i> Manage Rooms</h2>
     <th:block th:if="${session.role == 'admin'}">
-        <a th:href="@{/add_room}" class="btn btn-primary">Add Room</a>
+        <a th:href="@{/add_room}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Room</a>
     </th:block>
 </div>
 
+<div class="table-wrapper">
 <table class="data-table">
     <thead>
         <tr>
@@ -24,7 +25,7 @@
     <tbody>
         <th:block th:each="room : ${rooms}">
         <tr>
-            <td>[[${room.room_number}]]</td>
+            <td><strong>[[${room.room_number}]]</strong></td>
             <td>[[${room.room_type}]]</td>
             <td>Rs.[[${#numbers.formatDecimal(room.price, 1, 2)}]]</td>
             <td>
@@ -40,12 +41,17 @@
             </td>
         </tr>
         </th:block>
-        
+
         <tr th:if="${#lists.isEmpty(rooms)}">
-            <td colspan="5" class="text-center">No rooms found.</td>
+            <td colspan="5" class="text-center" style="padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-inbox" style="font-size:2rem; display:block; margin-bottom:0.5rem; opacity:0.4;"></i>
+                No rooms found.
+            </td>
         </tr>
     </tbody>
 </table>
+</div>
+
 </div>
 </body>
 </html>

@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
-<head><title>Title</title></head>
+<head><title>Grand Hotel — Complaints</title></head>
 <body>
 
 <div layout:fragment="content">
 <div class="page-header">
-    <h2>Customer Complaints</h2>
+    <h2><i class="fas fa-comment-dots" style="color:var(--gold); margin-right:0.5rem;"></i> Customer Complaints</h2>
 </div>
 
+<div class="table-wrapper">
 <table class="data-table">
     <thead>
         <tr>
-            <th>Date</th>
+            <th>Date &amp; Time</th>
             <th>Customer Name</th>
             <th>Room #</th>
             <th>Description</th>
@@ -25,11 +26,11 @@
             <td>
                 <!-- Substring safely assuming standard ISO format e.g. 2026-09-27T10:15:30 -->
                 <span th:text="${complaint.created_at != null and complaint.created_at.length() >= 10 ? #strings.substring(complaint.created_at, 0, 10) : ''}"></span>
-                <span th:text="${complaint.created_at != null and complaint.created_at.length() >= 16 ? #strings.substring(complaint.created_at, 11, 16) : ''}"></span>
+                <small class="text-muted" th:text="${complaint.created_at != null and complaint.created_at.length() >= 16 ? #strings.substring(complaint.created_at, 11, 16) : ''}"></small>
             </td>
             <td>[[${complaint.customer_name}]]</td>
-            <td>[[${complaint.room_number}]]</td>
-            <td>[[${complaint.complaint}]]</td>
+            <td><strong>[[${complaint.room_number}]]</strong></td>
+            <td style="max-width: 280px; word-break: break-word;">[[${complaint.complaint}]]</td>
             <td>
                 <span th:class="${complaint.status == 'Pending' ? 'badge badge-danger' : (complaint.status == 'In Progress' ? 'badge badge-warning' : 'badge badge-success')}">
                     [[${complaint.status}]]
@@ -38,20 +39,25 @@
             <td>
                 <form th:action="@{/update_complaint/{id}(id=${complaint.id})}" method="POST">
                     <select name="status" onchange="this.form.submit()" class="status-select">
-                        <option value="Pending" th:selected="${complaint.status == 'Pending'}">Pending</option>
+                        <option value="Pending"     th:selected="${complaint.status == 'Pending'}">Pending</option>
                         <option value="In Progress" th:selected="${complaint.status == 'In Progress'}">In Progress</option>
-                        <option value="Resolved" th:selected="${complaint.status == 'Resolved'}">Resolved</option>
+                        <option value="Resolved"    th:selected="${complaint.status == 'Resolved'}">Resolved</option>
                     </select>
                 </form>
             </td>
         </tr>
         </th:block>
-        
+
         <tr th:if="${#lists.isEmpty(complaints)}">
-            <td colspan="6" class="text-center">No complaints filed.</td>
+            <td colspan="6" class="text-center" style="padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-check-circle" style="font-size:2rem; display:block; margin-bottom:0.5rem; opacity:0.4;"></i>
+                No complaints filed.
+            </td>
         </tr>
     </tbody>
 </table>
+</div>
+
 </div>
 </body>
 </html>

@@ -3,32 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Management System</title>
+    <title>Grand Hotel Management System</title>
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
+    <!-- ── Navbar ── -->
     <nav class="navbar">
         <div class="logo">
             <a th:href="@{/}"><i class="fas fa-hotel"></i> Grand Hotel</a>
         </div>
-        <ul class="nav-links">
-            <li><a th:href="@{/}">Home</a></li>
+
+        <!-- Mobile hamburger -->
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
             <th:block th:if="${session.user_id != null}">
                 <th:block th:if="${session.role == 'admin'}">
-                    <li><a th:href="@{/dashboard}">Admin Dashboard</a></li>
-                    <li><a th:href="@{/complaints}">Complaints</a></li>
+                    <li><a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
+                    <li><a th:href="@{/complaints}"><i class="fas fa-comment-dots"></i> Complaints</a></li>
                 </th:block>
-                <li><a th:href="@{/rooms}">Rooms</a></li>
+                <li><a th:href="@{/rooms}"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a th:href="@{/bookings}" th:text="${session.role == 'admin' ? 'All Bookings' : 'My Bookings'}">Bookings</a></li>
-                <li><a th:href="@{/logout}" style="color: #ffcccc;">Logout ([[${session.username}]])</a></li>
-            </th:block><th:block th:unless="${session.user_id != null}">
-                <li><a th:href="@{/login}">Login</a></li>
-                <li><a th:href="@{/register}">Register</a></li>
+                <li><a th:href="@{/logout}" style="color: #f87171;"><i class="fas fa-sign-out-alt"></i> Logout ([[${session.username}]])</a></li>
+            </th:block>
+            <th:block th:unless="${session.user_id != null}">
+                <li><a th:href="@{/login}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li><a th:href="@{/register}"><i class="fas fa-user-plus"></i> Register</a></li>
             </th:block>
         </ul>
     </nav>
 
+    <!-- ── Main Content ── -->
     <div class="container">
         <div th:if="${success}" class="alert alert-success">
             <span th:text="${success}"></span>
@@ -38,12 +48,13 @@
             <span th:text="${danger}"></span>
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
         </div>
-        
+
         <div layout:fragment="content"></div>
     </div>
 
+    <!-- ── Footer ── -->
     <footer>
-        <p>&copy; 2024 Grand Hotel Management System. All rights reserved.</p>
+        <p>&copy; 2024 <span class="gold">Grand Hotel</span> Management System. All rights reserved.</p>
     </footer>
 
     <script th:src="@{/script.js}"></script>
