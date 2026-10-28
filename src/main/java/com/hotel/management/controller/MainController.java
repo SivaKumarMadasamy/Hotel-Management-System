@@ -48,8 +48,8 @@ public class MainController {
             model.addAttribute("total_rooms", rooms != null ? rooms.size() : 0);
             model.addAttribute("available_rooms", availableRooms);
             model.addAttribute("booked_rooms", bookedRooms);
-            model.addAttribute("total_bookings", bookings.size());
-            model.addAttribute("pending_complaints", complaints.size());
+            model.addAttribute("total_bookings", bookings != null ? bookings.size() : 0);
+            model.addAttribute("pending_complaints", complaints != null ? complaints.size() : 0);
             return "dashboard";
         } catch (Exception e) {
             redirect.addFlashAttribute("danger", "Error fetching dashboard data: " + e.getMessage());
@@ -151,19 +151,29 @@ public class MainController {
     @GetMapping("/bookings")
     public String bookings(HttpSession session, Model model) {
         if (!isLoggedIn(session)) return "redirect:/login";
-        // NOTE: In Java without ORM, fetching joined data manually or relying on DB view.
-        // PostgREST supports select=*,rooms(*).
-        // Since we didn't implement complex parsing, we fetch bookings and rooms separately and join.
         List<Map<String, Object>> bookings = supabase.select("bookings?select=*,rooms(*)", null, "check_in", true);
         
         List<Map<String, Object>> filtered = new ArrayList<>();
         String role = (String) session.getAttribute("role");
         String email = (String) session.getAttribute("email");
+        String username = (String) session.getAttribute("username");
         
         if (bookings != null) {
             for (Map<String, Object> b : bookings) {
-                if ("admin".equals(role) || email.equals(b.get("email"))) {
+                if ("admin".equals(role)) {
                     filtered.add(b);
+                } else {
+                    String bEmail = b.get("email") != null ? String.valueOf(b.get("email")).trim() : "";
+                    String bCustomer = b.get("customer_name") != null ? String.valueOf(b.get("customer_name")).trim() : "";
+                    
+                    boolean userMatches = username != null && !username.isBlank() && username.trim().equalsIgnoreCase(bCustomer);
+                    boolean emailMatches = email != null && !email.isBlank() && email.trim().equalsIgnoreCase(bEmail);
+                    
+                    if (userMatches) {
+                        filtered.add(b);
+                    } else if (emailMatches && (bCustomer.isBlank() || bCustomer.equalsIgnoreCase(username))) {
+                        filtered.add(b);
+                    }
                 }
             }
         }
@@ -181,6 +191,9 @@ public class MainController {
         List<Map<String, Object>> users = supabase.select("users", Map.of("id", String.valueOf(session.getAttribute("user_id"))), null, false);
         if (users != null && !users.isEmpty()) {
             userInfo = users.get(0);
+        } else {
+            userInfo.put("username", session.getAttribute("username"));
+            userInfo.put("email", session.getAttribute("email"));
         }
         model.addAttribute("user_info", userInfo);
         return "book_room";
@@ -212,6 +225,20 @@ public class MainController {
             double price = Double.parseDouble(rooms.get(0).get("price").toString());
             double totalPrice = days * price;
             
+            String role = (String) session.getAttribute("role");
+            String sessionUsername = (String) session.getAttribute("username");
+            String sessionEmail = (String) session.getAttribute("email");
+            
+            // For customers, ensure booking is strictly bound to their authenticated account
+            if (!"admin".equals(role)) {
+                if (sessionUsername != null && !sessionUsername.isBlank()) {
+                    customer_name = sessionUsername.trim();
+                }
+                if (sessionEmail != null && !sessionEmail.isBlank()) {
+                    email = sessionEmail.trim().toLowerCase();
+                }
+            }
+            
             Map<String, Object> booking = new HashMap<>();
             booking.put("room_id", room_id);
             booking.put("customer_name", customer_name);
@@ -226,7 +253,7 @@ public class MainController {
             supabase.update("rooms", "id", room_id, Map.of("status", "Booked"));
             
             redirect.addFlashAttribute("success", String.format("Room booked successfully! Total price: Rs.%.2f", totalPrice));
-            return "redirect:/dashboard";
+            return "redirect:/bookings";
         } catch (Exception e) {
             redirect.addFlashAttribute("danger", "Error booking room: " + e.getMessage());
             return "redirect:/book_room";
@@ -240,11 +267,37 @@ public class MainController {
             List<Map<String, Object>> bookings = supabase.select("bookings", Map.of("id", String.valueOf(id)), null, false);
             if (bookings != null && !bookings.isEmpty()) {
                 Map<String, Object> booking = bookings.get(0);
+                
+                String role = (String) session.getAttribute("role");
+                String email = (String) session.getAttribute("email");
+                String username = (String) session.getAttribute("username");
+                
+                boolean canCancel = false;
+                if ("admin".equals(role)) {
+                    canCancel = true;
+                } else {
+                    String bEmail = booking.get("email") != null ? String.valueOf(booking.get("email")).trim() : "";
+                    String bCustomer = booking.get("customer_name") != null ? String.valueOf(booking.get("customer_name")).trim() : "";
+                    if ((username != null && !username.isBlank() && username.trim().equalsIgnoreCase(bCustomer)) ||
+                        (email != null && !email.isBlank() && email.trim().equalsIgnoreCase(bEmail))) {
+                        canCancel = true;
+                    }
+                }
+                
+                if (!canCancel) {
+                    redirect.addFlashAttribute("danger", "You are not authorized to cancel this booking!");
+                    return "redirect:/bookings";
+                }
+                
                 if ("Active".equals(booking.get("status"))) {
                     supabase.update("bookings", "id", id, Map.of("status", "Cancelled"));
                     supabase.update("rooms", "id", booking.get("room_id"), Map.of("status", "Available"));
                     redirect.addFlashAttribute("success", "Booking cancelled successfully!");
+                } else {
+                    redirect.addFlashAttribute("danger", "This booking is already cancelled.");
                 }
+            } else {
+                redirect.addFlashAttribute("danger", "Booking not found.");
             }
         } catch (Exception e) {
             redirect.addFlashAttribute("danger", "Error: " + e.getMessage());

@@ -42,6 +42,9 @@ public class AuthController {
             // ---------------------------------
             
             List<Map<String, Object>> users = supabase.select("users", Map.of("email", email), null, false);
+            if (users == null || users.isEmpty()) {
+                users = supabase.select("users", Map.of("username", email), null, false);
+            }
             
             if (users != null && !users.isEmpty()) {
                 Map<String, Object> user = users.get(0);
@@ -53,7 +56,11 @@ public class AuthController {
                     session.setAttribute("email", user.get("email"));
                     session.setAttribute("role", user.getOrDefault("role", "customer"));
                     redirect.addFlashAttribute("success", "Login successful!");
-                    return "redirect:/dashboard";
+                    if ("admin".equals(user.get("role"))) {
+                        return "redirect:/dashboard";
+                    } else {
+                        return "redirect:/bookings";
+                    }
                 }
             }
             redirect.addFlashAttribute("danger", "Invalid email or password!");
@@ -106,9 +113,7 @@ public class AuthController {
         }
     }
 
-
     @GetMapping("/logout")
-
     public String logout(HttpSession session, RedirectAttributes redirect) {
         session.invalidate();
         redirect.addFlashAttribute("success", "You have been logged out.");

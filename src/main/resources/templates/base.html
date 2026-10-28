@@ -20,7 +20,7 @@
                     <li><a th:href="@{/complaints}">Complaints</a></li>
                 </th:block>
                 <li><a th:href="@{/rooms}">Rooms</a></li>
-                <li><a th:href="@{/bookings}">Bookings</a></li>
+                <li><a th:href="@{/bookings}" th:text="${session.role == 'admin' ? 'All Bookings' : 'My Bookings'}">Bookings</a></li>
                 <li><a th:href="@{/logout}" style="color: #ffcccc;">Logout ([[${session.username}]])</a></li>
             </th:block><th:block th:unless="${session.user_id != null}">
                 <li><a th:href="@{/login}">Login</a></li>

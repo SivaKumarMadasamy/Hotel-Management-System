@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
-<head><title>Title</title></head>
+<head><title>Booking History</title></head>
 <body>
 
 <div layout:fragment="content">
 <div class="page-header">
-    <h2>Bookings Log</h2>
+    <h2 th:text="${session.role == 'admin' ? 'Bookings Log (All)' : 'My Booking History'}">Booking History</h2>
     <a th:href="@{/book_room}" class="btn btn-primary">New Booking</a>
 </div>
 
@@ -51,7 +51,7 @@
         </th:block>
         
         <tr th:if="${#lists.isEmpty(bookings)}">
-            <td colspan="7" class="text-center">No bookings found.</td>
+            <td colspan="7" class="text-center">No booking history found.</td>
         </tr>
     </tbody>
 </table>
