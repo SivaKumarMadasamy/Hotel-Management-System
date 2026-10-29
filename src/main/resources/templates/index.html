@@ -11,8 +11,14 @@
             <h1>Welcome to Grand Hotel</h1>
             <p>A complete solution to manage rooms, bookings, and customer complaints — with luxury at its heart.</p>
             <div class="hero-buttons">
-                <a th:href="@{/book_room}" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Book a Room</a>
-                <a th:href="@{/add_complaint}" class="btn btn-secondary"><i class="fas fa-comment-dots"></i> Submit Complaint</a>
+                <th:block th:if="${session.user_id != null}">
+                    <a th:href="@{/book_room}" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Book a Room</a>
+                    <a th:href="@{/add_complaint}" class="btn btn-secondary"><i class="fas fa-comment-dots"></i> Submit Complaint</a>
+                </th:block>
+                <th:block th:unless="${session.user_id != null}">
+                    <a th:href="@{/login}" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login to Book</a>
+                    <a th:href="@{/register}" class="btn btn-secondary"><i class="fas fa-user-plus"></i> Create Account</a>
+                </th:block>
             </div>
         </div>
     </div>
