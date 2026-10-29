@@ -35,7 +35,7 @@
             </td>
             <td>[[${booking.check_in}]]</td>
             <td>[[${booking.check_out}]]</td>
-            <td><strong>Rs.[[${#numbers.formatDecimal(booking.total_price, 1, 2)}]]</strong></td>
+            <td><strong>Rs.[[${booking.total_price != null ? #numbers.formatDecimal(booking.total_price, 1, 2) : '0.00'}]]</strong></td>
             <td>
                 <span th:class="${booking.status == 'Active' ? 'badge badge-success' : 'badge badge-secondary'}">
                     [[${booking.status}]]
@@ -54,7 +54,7 @@
         </tr>
         </th:block>
 
-        <tr th:if="${#lists.isEmpty(bookings)}">
+        <tr th:if="${bookings == null or #lists.isEmpty(bookings)}">
             <td colspan="7" class="text-center" style="padding: 2rem; color: var(--text-muted);">
                 <i class="fas fa-calendar-times" style="font-size:2rem; display:block; margin-bottom:0.5rem; opacity:0.4;"></i>
                 No booking history found.

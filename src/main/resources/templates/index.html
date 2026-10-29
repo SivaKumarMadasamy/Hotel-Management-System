@@ -1,209 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
-<head><title>Grand Hotel — Home</title>
-<style>
-/* ---- Homepage specific ---- */
-.home-hero {
-    text-align: center;
-    padding: 6rem 2rem 4.5rem;
-    position: relative;
-    overflow: hidden;
-}
-.home-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 65% at 50% 40%, rgba(26,58,92,0.55) 0%, transparent 70%);
-    pointer-events: none;
-}
-.home-hero-inner { position: relative; z-index: 1; }
-
-.home-hero-badge {
-    display: inline-block;
-    padding: 0.4rem 1.4rem;
-    background: rgba(201,168,76,0.12);
-    border: 1px solid var(--gold);
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    margin-bottom: 1.8rem;
-}
-
-.home-hero h1 {
-    font-size: clamp(2.6rem, 6vw, 4.2rem);
-    color: #fff;
-    line-height: 1.15;
-    margin-bottom: 1.3rem;
-}
-.home-hero h1 em { color: var(--gold-light); font-style: italic; }
-
-.home-hero p {
-    font-size: clamp(1rem, 2.2vw, 1.2rem);
-    color: var(--text-muted);
-    max-width: 580px;
-    margin: 0 auto 2.8rem;
-}
-
-.home-hero-btns {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* ---- Stats strip ---- */
-.stats-strip {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    flex-wrap: wrap;
-    padding: 2.2rem 2rem;
-    margin: 0 0 1rem;
-    background: rgba(255,255,255,0.03);
-    border-top: 1px solid var(--gold-muted);
-    border-bottom: 1px solid var(--gold-muted);
-}
-.strip-stat { text-align: center; }
-.strip-stat .val {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--gold-bright);
-    line-height: 1;
-    display: block;
-}
-.strip-stat .lbl {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    display: block;
-    margin-top: 0.3rem;
-}
-
-/* ---- Featured rooms section ---- */
-.featured-section {
-    padding: 3.5rem 0 2rem;
-}
-.section-head {
-    text-align: center;
-    margin-bottom: 2.5rem;
-}
-.section-head h2 { margin-bottom: 0.5rem; }
-.section-divider {
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(to right, var(--gold), var(--gold-bright));
-    border-radius: 2px;
-    margin: 0.8rem auto 1rem;
-}
-.section-head p { color: var(--text-muted); font-size: 0.95rem; max-width: 480px; margin: 0 auto; }
-
-.featured-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    gap: 1.6rem;
-}
-
-.feat-card {
-    background: var(--navy-card);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--glass-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.feat-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 50px rgba(0,0,0,0.55);
-}
-.feat-photo {
-    width: 100%;
-    height: 185px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-}
-.feat-card:hover .feat-photo { transform: scale(1.05); }
-.feat-photo-wrap { overflow: hidden; }
-.feat-body { padding: 1.3rem 1.4rem 1.5rem; }
-.feat-type {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.35rem;
-}
-.feat-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    color: #fff;
-    margin-bottom: 0.5rem;
-}
-.feat-desc { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1.1rem; line-height: 1.6; }
-.feat-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.feat-price {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--gold-bright);
-    line-height: 1;
-}
-.feat-price span { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 400; color: var(--text-muted); margin-left: 0.15rem; }
-
-/* ---- Features strip ---- */
-.features-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1.4rem;
-    padding: 3rem 0;
-}
-.feat-strip-card {
-    padding: 2rem 1.5rem;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.feat-strip-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 32px rgba(201,168,76,0.14);
-}
-.feat-strip-card i { font-size: 2.2rem; color: var(--gold); display: block; margin-bottom: 1rem; }
-.feat-strip-card h3 { font-size: 1.05rem; margin-bottom: 0.5rem; }
-.feat-strip-card p  { font-size: 0.85rem; }
-
-/* ---- CTA Banner ---- */
-.cta-banner {
-    text-align: center;
-    padding: 3.5rem 2rem;
-    background: linear-gradient(135deg, rgba(201,168,76,0.10) 0%, rgba(13,33,55,0.60) 100%);
-    border: 1px solid var(--gold-muted);
-    border-radius: var(--radius-xl);
-    margin: 1rem 0 2.5rem;
-}
-.cta-banner h2 { margin-bottom: 0.8rem; }
-.cta-banner p  { font-size: 1rem; max-width: 480px; margin: 0 auto 2rem; }
-.cta-banner-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-</style>
-</head>
+<head><title>Grand Hotel — Home</title></head>
 <body>
 
 <div layout:fragment="content">
 
     <!-- ===== HERO ===== -->
     <div class="home-hero">
-        <div class="home-hero-inner animate-on-scroll">
+        <div class="home-hero-inner fade-in">
             <div class="home-hero-badge">Luxury Hotel Experience</div>
             <h1>Welcome to <em>Grand Hotel</em></h1>
             <p>Indulge in world-class hospitality, elegantly appointed rooms, and seamless online booking — all in one place.</p>
@@ -221,7 +25,7 @@
     </div>
 
     <!-- ===== STATS STRIP ===== -->
-    <div class="stats-strip animate-on-scroll">
+    <div class="stats-strip fade-in">
         <div class="strip-stat"><span class="val">50+</span><span class="lbl">Luxury Rooms</span></div>
         <div class="strip-stat"><span class="val">4.9</span><span class="lbl">Guest Rating</span></div>
         <div class="strip-stat"><span class="val">10K+</span><span class="lbl">Happy Guests</span></div>
@@ -229,7 +33,7 @@
     </div>
 
     <!-- ===== FEATURED ROOMS ===== -->
-    <div class="featured-section animate-on-scroll">
+    <div class="featured-section fade-in">
         <div class="section-head">
             <h2>Our Signature Rooms</h2>
             <div class="section-divider"></div>
@@ -239,7 +43,7 @@
         <div class="featured-grid">
 
             <!-- Single Room -->
-            <div class="feat-card animate-on-scroll">
+            <div class="feat-card fade-in">
                 <div class="feat-photo-wrap">
                     <img class="feat-photo"
                          src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80"
@@ -259,7 +63,7 @@
             </div>
 
             <!-- Double Room -->
-            <div class="feat-card animate-on-scroll">
+            <div class="feat-card fade-in">
                 <div class="feat-photo-wrap">
                     <img class="feat-photo"
                          src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80"
@@ -279,7 +83,7 @@
             </div>
 
             <!-- Deluxe Room -->
-            <div class="feat-card animate-on-scroll">
+            <div class="feat-card fade-in">
                 <div class="feat-photo-wrap">
                     <img class="feat-photo"
                          src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80"
@@ -299,7 +103,7 @@
             </div>
 
             <!-- Suite -->
-            <div class="feat-card animate-on-scroll">
+            <div class="feat-card fade-in">
                 <div class="feat-photo-wrap">
                     <img class="feat-photo"
                          src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80"
@@ -327,22 +131,22 @@
 
     <!-- ===== FEATURES STRIP ===== -->
     <div class="features-strip">
-        <div class="feat-strip-card animate-on-scroll">
+        <div class="feat-strip-card fade-in">
             <i class="fas fa-bed"></i>
             <h3>Luxurious Rooms</h3>
             <p>Every room is thoughtfully furnished to ensure maximum comfort and an unforgettable stay.</p>
         </div>
-        <div class="feat-strip-card animate-on-scroll">
+        <div class="feat-strip-card fade-in">
             <i class="fas fa-calendar-check"></i>
             <h3>Easy Bookings</h3>
             <p>Seamless online booking with real-time availability, instant confirmation, and price estimates.</p>
         </div>
-        <div class="feat-strip-card animate-on-scroll">
+        <div class="feat-strip-card fade-in">
             <i class="fas fa-shield-alt"></i>
             <h3>Secure Payments</h3>
             <p>Your transactions are safe and transparent with our fully secured booking system.</p>
         </div>
-        <div class="feat-strip-card animate-on-scroll">
+        <div class="feat-strip-card fade-in">
             <i class="fas fa-headset"></i>
             <h3>24/7 Support</h3>
             <p>Our dedicated concierge team is always available to assist with any request or concern.</p>
@@ -351,7 +155,7 @@
 
     <!-- ===== CTA BANNER (guests only) ===== -->
     <th:block th:unless="${session.user_id != null}">
-        <div class="cta-banner animate-on-scroll">
+        <div class="cta-banner fade-in">
             <h2>Ready for an Unforgettable Stay?</h2>
             <p>Create your account today and unlock exclusive rates, personalised service, and easy online booking.</p>
             <div class="cta-banner-btns">

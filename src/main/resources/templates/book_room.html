@@ -44,14 +44,14 @@
         <div class="form-group">
             <label for="room_id">Select Available Room</label>
 
-            <select th:if="${not #lists.isEmpty(available_rooms)}" id="room_id" name="room_id" required onchange="calculatePrice()">
+            <select th:if="${available_rooms != null and not #lists.isEmpty(available_rooms)}" id="room_id" name="room_id" required onchange="calculatePrice()">
                 <option value="" disabled selected>-- Select a Room --</option>
                 <option th:each="room : ${available_rooms}" th:value="${room.id}" th:attr="data-price=${room.price}">
-                    Room [[${room.room_number}]] - [[${room.room_type}]] (Rs.[[${#numbers.formatDecimal(room.price, 1, 2)}]]/night)
+                    Room [[${room.room_number}]] - [[${room.room_type}]] (Rs.[[${room.price != null ? #numbers.formatDecimal(room.price, 1, 2) : '0.00'}]]/night)
                 </option>
             </select>
 
-            <div th:if="${#lists.isEmpty(available_rooms)}" class="alert alert-warning">
+            <div th:if="${available_rooms == null or #lists.isEmpty(available_rooms)}" class="alert alert-warning">
                 <i class="fas fa-exclamation-triangle"></i> No rooms are currently available!
             </div>
         </div>
@@ -61,7 +61,7 @@
             <p><small><span id="days_count">0</span> nights</small></p>
         </div>
 
-        <button type="submit" class="btn btn-success btn-block" id="submitBtn" th:disabled="${#lists.isEmpty(available_rooms)}">
+        <button type="submit" class="btn btn-success btn-block" id="submitBtn" th:disabled="${available_rooms == null or #lists.isEmpty(available_rooms)}">
             <i class="fas fa-check-circle"></i> Confirm Booking
         </button>
     </form>

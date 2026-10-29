@@ -33,8 +33,10 @@ public class SupabaseService {
     public List<Map<String, Object>> select(String table, Map<String, String> equals, String orderBy, boolean desc) {
         if (supabaseUrl == null) return new ArrayList<>();
         try {
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(supabaseUrl + "/rest/v1/" + table)
-                .queryParam("select", "*");
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(supabaseUrl + "/rest/v1/" + table);
+            if (!table.contains("select=")) {
+                builder.queryParam("select", "*");
+            }
             
             if (equals != null) {
                 for (Map.Entry<String, String> entry : equals.entrySet()) {

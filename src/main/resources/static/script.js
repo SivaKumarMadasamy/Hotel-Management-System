@@ -1,8 +1,8 @@
 /* =============================================
-   Grand Hotel — script.js
+   Grand Hotel - script.js
    ============================================= */
 
-// ── Price Calculator ──────────────────────────
+// Price Calculator for Booking Page
 function calculatePrice() {
     const checkInInput  = document.getElementById('check_in');
     const checkOutInput = document.getElementById('check_out');
@@ -31,7 +31,7 @@ function calculatePrice() {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         const selectedOption  = roomSelect.options[roomSelect.selectedIndex];
-        const pricePerNight   = parseFloat(selectedOption.getAttribute('data-price'));
+        const pricePerNight   = parseFloat(selectedOption.getAttribute('data-price') || 0);
         const totalPrice      = diffDays * pricePerNight;
 
         if (daysCountSpan)        daysCountSpan.textContent       = diffDays;
@@ -44,7 +44,7 @@ function calculatePrice() {
     }
 }
 
-// ── Date Constraints ──────────────────────────
+// Date Constraints & Global Interactions
 document.addEventListener('DOMContentLoaded', function () {
     const checkInInput  = document.getElementById('check_in');
     const checkOutInput = document.getElementById('check_out');
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ── Auto-dismiss Alerts after 5 s ─────────
+    // Auto-dismiss Alerts after 5 seconds
     document.querySelectorAll('.alert').forEach(function (alert) {
         setTimeout(function () {
             alert.style.transition = 'opacity 0.6s ease';
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     });
 
-    // ── Mobile Nav Toggle ─────────────────────
+    // Mobile Navbar Toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks  = document.getElementById('navLinks');
     if (navToggle && navLinks) {
@@ -81,17 +81,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ── Intersection Observer Fade-ins ────────
-    const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.12 });
+    // Intersection Observer for Smooth Fade-ins
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
 
-    document.querySelectorAll('.fade-in').forEach(function (el) {
-        observer.observe(el);
-    });
+        document.querySelectorAll('.fade-in, .animate-on-scroll').forEach(function (el) {
+            observer.observe(el);
+        });
+    } else {
+        document.querySelectorAll('.fade-in, .animate-on-scroll').forEach(function (el) {
+            el.classList.add('visible');
+        });
+    }
 });

@@ -1,131 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{base}">
-<head><title>Grand Hotel — Rooms</title>
-<style>
-.rooms-page-header { text-align: center; padding: 2rem 0 0.5rem; }
-.rooms-page-header h2 { margin-bottom: 0.4rem; }
-.rooms-divider { width: 60px; height: 3px; background: linear-gradient(to right, var(--gold), var(--gold-bright)); border-radius: 2px; margin: 0.8rem auto 1rem; }
-.rooms-page-header p { color: var(--text-muted); font-size: 0.95rem; max-width: 500px; margin: 0 auto; }
-.rooms-admin-bar { display: flex; justify-content: flex-end; margin: 1.5rem 0 0.5rem; }
-
-.rooms-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.8rem;
-    margin-top: 1rem;
-    margin-bottom: 3rem;
-}
-
-.room-card {
-    background: var(--navy-card);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--glass-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-.room-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 20px 56px rgba(0,0,0,0.55);
-}
-
-.room-photo-box {
-    width: 100%;
-    height: 210px;
-    background-size: cover;
-    background-position: center;
-    background-color: var(--navy-light);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.4s ease;
-}
-.room-card:hover .room-photo-box { transform: scale(1.04); }
-
-.room-type-badge {
-    position: absolute; top: 12px; left: 12px;
-    background: rgba(10,22,40,0.85);
-    border: 1px solid var(--gold-muted);
-    color: var(--gold-light);
-    font-size: 0.7rem; font-weight: 700;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    padding: 0.28rem 0.75rem;
-    border-radius: 50px;
-    backdrop-filter: blur(6px);
-}
-.status-pill-abs {
-    position: absolute; top: 12px; right: 12px;
-    font-size: 0.7rem; font-weight: 700;
-    padding: 0.28rem 0.75rem; border-radius: 50px;
-}
-.sp-available { background: rgba(46,204,113,0.22); border: 1px solid rgba(46,204,113,0.55); color: #6ddfa2; }
-.sp-booked    { background: rgba(231,76,60,0.22);  border: 1px solid rgba(231,76,60,0.55);  color: #f0857a; }
-.sp-other     { background: rgba(241,196,15,0.20); border: 1px solid rgba(241,196,15,0.50); color: #f5d76e; }
-
-.room-card-body { padding: 1.4rem 1.5rem 1.6rem; flex: 1; display: flex; flex-direction: column; }
-.room-num-tag   { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.35rem; }
-.room-title     { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: #fff; margin-bottom: 0.5rem; }
-.room-desc      { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6; flex: 1; }
-.room-amenities { display: flex; gap: 0.8rem; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.1rem; flex-wrap: wrap; }
-.room-amenities span { display: flex; align-items: center; gap: 0.3rem; }
-.room-amenities i { color: rgba(201,168,76,0.6); }
-.room-price-row { display: flex; align-items: center; justify-content: space-between; }
-.room-price     { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--gold-bright); line-height: 1; }
-.room-price small { font-family: 'Inter', sans-serif; font-size: 0.76rem; font-weight: 400; color: var(--text-muted); }
-.room-admin-row { display: flex; gap: 0.6rem; flex-wrap: wrap; border-top: 1px solid var(--gold-muted); padding-top: 0.9rem; margin-top: 1rem; }
-
-.empty-rooms { text-align: center; padding: 5rem 2rem; }
-.empty-rooms i { font-size: 3.5rem; color: rgba(201,168,76,0.25); margin-bottom: 1rem; display: block; }
-.empty-rooms h3, .empty-rooms p { color: var(--text-muted); }
-</style>
-</head>
+<head><title>Grand Hotel — Rooms</title></head>
 <body>
+
 <div layout:fragment="content">
 
     <!-- Page Header -->
-    <div class="rooms-page-header animate-on-scroll">
-        <h2><i class="fas fa-hotel" style="color:var(--gold);margin-right:.5rem;"></i>Our Rooms</h2>
-        <div class="rooms-divider"></div>
-        <p>Choose from our range of thoughtfully designed rooms — from cosy Singles to presidential Suites.</p>
+    <div class="page-header">
+        <div>
+            <h2><i class="fas fa-door-open" style="color:var(--gold); margin-right:0.5rem;"></i> Our Rooms</h2>
+            <p>Choose from our range of thoughtfully designed rooms — from cosy Singles to presidential Suites.</p>
+        </div>
+        <div th:if="${session.role == 'admin'}">
+            <a th:href="@{/add_room}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Room</a>
+        </div>
     </div>
 
-    <!-- Admin Bar -->
-    <div class="rooms-admin-bar" th:if="${session.role == 'admin'}">
-        <a th:href="@{/add_room}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Room</a>
-    </div>
-
-    <!-- Cards Grid -->
-    <div class="rooms-card-grid">
+    <!-- Room Cards Grid -->
+    <div class="rooms-grid" th:if="${rooms != null and not #lists.isEmpty(rooms)}">
         <th:block th:each="room : ${rooms}">
-            <div class="room-card animate-on-scroll">
+            <div class="room-card fade-in">
 
-                <!-- Photo -->
-                <div class="room-photo-box"
-                     th:attr="data-type=${room.room_type}">
-                    <span class="room-type-badge" th:text="${room.room_type}">Type</span>
-                    <span class="status-pill-abs"
-                          th:classappend="${room.status == 'Available'} ? ' sp-available' : (${room.status == 'Booked'} ? ' sp-booked' : ' sp-other')"
-                          th:text="${room.status}">Status</span>
+                <!-- Photo (styled via CSS by data-type attribute) -->
+                <div class="room-card-photo-wrap">
+                    <div class="room-card-photo" th:attr="data-type=${room.room_type}">
+                        <span class="room-type-badge" th:text="${room.room_type}">Single</span>
+                        <span th:class="${room.status == 'Available' ? 'status-pill-abs sp-available' : (room.status == 'Booked' ? 'status-pill-abs sp-booked' : 'status-pill-abs sp-other')}"
+                              th:text="${room.status}">Available</span>
+                    </div>
                 </div>
 
-                <!-- Body -->
+                <!-- Card Body -->
                 <div class="room-card-body">
-                    <div class="room-num-tag">Room <span th:text="${room.room_number}"></span></div>
+                    <div class="room-card-type">Room [[${room.room_number}]]</div>
 
-                    <div class="room-title"
-                         th:text="${room.room_type == 'Single'} ? 'Classic Single Room' :
-                                  (${room.room_type == 'Double'} ? 'Comfort Double Room' :
-                                  (${room.room_type == 'Deluxe'} ? 'Deluxe King Room' :
-                                  (${room.room_type == 'Suite'}  ? 'Presidential Suite'  : room.room_type + ' Room')))">Name</div>
+                    <div class="room-card-name"
+                         th:text="${room.room_type == 'Single' ? 'Classic Single Room' : (room.room_type == 'Double' ? 'Comfort Double Room' : (room.room_type == 'Deluxe' ? 'Deluxe King Room' : (room.room_type == 'Suite' ? 'Presidential Suite' : room.room_type + ' Room')))}">Room Name</div>
 
-                    <div class="room-desc"
-                         th:text="${room.room_type == 'Single'} ? 'A cosy haven for solo travellers — plush bedding, modern amenities, and serene decor.' :
-                                  (${room.room_type == 'Double'} ? 'Spacious and inviting with a king-size bed, premium linens, and a relaxing ambience.' :
-                                  (${room.room_type == 'Deluxe'} ? 'Elevated luxury with panoramic views, premium furnishings, and exclusive spa access.' :
-                                  (${room.room_type == 'Suite'}  ? 'Our finest suite — private living area, jacuzzi, butler service, and unmatched opulence.' :
-                                                                    'A comfortable, well-furnished room designed for a pleasant and memorable stay.')))">Desc</div>
+                    <div class="room-card-desc"
+                         th:text="${room.room_type == 'Single' ? 'A cosy haven for solo travellers — plush bedding, modern amenities, and serene decor.' : (room.room_type == 'Double' ? 'Spacious and inviting with a king-size bed, premium linens, and a relaxing ambience.' : (room.room_type == 'Deluxe' ? 'Elevated luxury with panoramic views, premium furnishings, and exclusive spa access.' : (room.room_type == 'Suite' ? 'Our finest suite — private living area, jacuzzi, butler service, and unmatched opulence.' : 'A comfortable, well-furnished room designed for a pleasant and memorable stay.')))}">Description</div>
 
+                    <!-- Amenities -->
                     <div class="room-amenities">
                         <span><i class="fas fa-wifi"></i> Wi-Fi</span>
                         <span><i class="fas fa-snowflake"></i> AC</span>
@@ -134,32 +49,31 @@
                         <span th:if="${room.room_type == 'Suite'}"><i class="fas fa-concierge-bell"></i> Butler</span>
                     </div>
 
+                    <!-- Price & Booking -->
                     <div class="room-price-row">
-                        <div class="room-price">
-                            Rs.<span th:text="${#numbers.formatDecimal(room.price,1,2)}">0</span>
-                            <small>/ night</small>
+                        <div class="room-card-price">
+                            Rs.[[${room.price != null ? #numbers.formatDecimal(room.price, 1, 2) : '0.00'}]]
+                            <span>/ night</span>
                         </div>
                         <a th:href="@{/book_room}" class="btn btn-primary btn-sm"
                            th:if="${room.status == 'Available' and session.user_id != null and session.role != 'admin'}">
-                            <i class="fas fa-calendar-check"></i> Book
+                            <i class="fas fa-calendar-check"></i> Book Now
                         </a>
                         <a th:href="@{/login}" class="btn btn-secondary btn-sm"
                            th:if="${room.status == 'Available' and session.user_id == null}">
-                            <i class="fas fa-sign-in-alt"></i> Login
+                            <i class="fas fa-sign-in-alt"></i> Login to Book
                         </a>
                     </div>
 
-                    <!-- Admin actions -->
+                    <!-- Admin Actions -->
                     <div class="room-admin-row" th:if="${session.role == 'admin'}">
                         <a th:href="@{/edit_room/{id}(id=${room.id})}" class="btn btn-sm"
                            style="background:linear-gradient(135deg,#d4a017,#f39c12);color:#0a1628;">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                        <form th:action="@{/delete_room/{id}(id=${room.id})}" method="POST"
-                              style="display:inline;" onsubmit="return confirm('Delete this room?');">
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
+                        <form th:action="@{/delete_room/{id}(id=${room.id})}" method="POST" style="display:inline;"
+                              onsubmit="return confirm('Are you sure you want to delete this room?');">
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
                         </form>
                     </div>
                 </div>
@@ -168,34 +82,16 @@
         </th:block>
     </div>
 
-    <!-- Empty state -->
-    <div class="empty-rooms" th:if="${rooms == null or rooms.size() == 0}">
+    <!-- Empty State -->
+    <div class="empty-state" th:if="${rooms == null or #lists.isEmpty(rooms)}">
         <i class="fas fa-door-open"></i>
         <h3>No Rooms Available</h3>
         <p>No rooms have been added to the system yet.</p>
-        <a th:if="${session.role == 'admin'}" th:href="@{/add_room}" class="btn btn-primary" style="margin-top:1.5rem;">
+        <a th:if="${session.role == 'admin'}" th:href="@{/add_room}" class="btn btn-primary mt-3">
             <i class="fas fa-plus"></i> Add First Room
         </a>
     </div>
 
 </div>
-
-<script>
-/* Assign Unsplash photo to each room card based on its room type */
-document.addEventListener('DOMContentLoaded', function () {
-    var photos = {
-        'Single':  'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80',
-        'Double':  'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&q=80',
-        'Deluxe':  'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80',
-        'Suite':   'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80',
-        'default': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'
-    };
-    document.querySelectorAll('.room-photo-box').forEach(function (el) {
-        var type = el.getAttribute('data-type') || 'default';
-        var url  = photos[type] || photos['default'];
-        el.style.backgroundImage = 'url(' + url + ')';
-    });
-});
-</script>
 </body>
 </html>
