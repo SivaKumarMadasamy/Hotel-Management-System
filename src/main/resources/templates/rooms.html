@@ -11,7 +11,8 @@
             <h2><i class="fas fa-door-open" style="color:var(--gold); margin-right:0.5rem;"></i> Our Rooms</h2>
             <p>Choose from our range of thoughtfully designed rooms — from cosy Singles to presidential Suites.</p>
         </div>
-        <div th:if="${session.role == 'admin'}">
+        <div th:if="${session.role == 'admin'}" style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <a th:href="@{/seed_rooms}" class="btn btn-secondary"><i class="fas fa-magic"></i> Seed Rooms 1–20</a>
             <a th:href="@{/add_room}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Room</a>
         </div>
     </div>
@@ -21,9 +22,9 @@
         <th:block th:each="room : ${rooms}">
             <div class="room-card fade-in">
 
-                <!-- Photo (styled via CSS by data-type attribute) -->
+                <!-- Photo (styled via CSS by room number & data-type attribute) -->
                 <div class="room-card-photo-wrap">
-                    <div class="room-card-photo" th:attr="data-type=${room.room_type}">
+                    <div class="room-card-photo" th:attr="data-type=${room.room_type}, data-room-number=${room.room_number}">
                         <span class="room-type-badge" th:text="${room.room_type}">Single</span>
                         <span th:class="${room.status == 'Available' ? 'status-pill-abs sp-available' : (room.status == 'Booked' ? 'status-pill-abs sp-booked' : 'status-pill-abs sp-other')}"
                               th:text="${room.status}">Available</span>
@@ -87,9 +88,10 @@
         <i class="fas fa-door-open"></i>
         <h3>No Rooms Available</h3>
         <p>No rooms have been added to the system yet.</p>
-        <a th:if="${session.role == 'admin'}" th:href="@{/add_room}" class="btn btn-primary mt-3">
-            <i class="fas fa-plus"></i> Add First Room
-        </a>
+        <div th:if="${session.role == 'admin'}" style="margin-top:1.5rem; display:flex; gap:0.8rem; justify-content:center;">
+            <a th:href="@{/seed_rooms}" class="btn btn-secondary"><i class="fas fa-magic"></i> Seed Rooms 1–20</a>
+            <a th:href="@{/add_room}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Room</a>
+        </div>
     </div>
 
 </div>

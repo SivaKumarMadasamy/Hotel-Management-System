@@ -23,15 +23,15 @@ public class SupabaseService {
 
     private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("apikey", supabaseKey);
-        headers.set("Authorization", "Bearer " + supabaseKey);
+        headers.set("apikey", supabaseKey != null ? supabaseKey : "");
+        headers.set("Authorization", "Bearer " + (supabaseKey != null ? supabaseKey : ""));
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Prefer", "return=representation");
         return headers;
     }
 
     public List<Map<String, Object>> select(String table, Map<String, String> equals, String orderBy, boolean desc) {
-        if (supabaseUrl == null) return new ArrayList<>();
+        if (supabaseUrl == null || supabaseUrl.isBlank()) return new ArrayList<>();
         try {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(supabaseUrl + "/rest/v1/" + table);
             if (!table.contains("select=")) {
@@ -60,11 +60,13 @@ public class SupabaseService {
     }
 
     public void insert(String table, Map<String, Object> data) throws Exception {
+        if (supabaseUrl == null || supabaseUrl.isBlank()) return;
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(data, getHeaders());
         restTemplate.postForEntity(supabaseUrl + "/rest/v1/" + table, entity, String.class);
     }
 
     public void update(String table, String idCol, Object idVal, Map<String, Object> data) throws Exception {
+        if (supabaseUrl == null || supabaseUrl.isBlank()) return;
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(supabaseUrl + "/rest/v1/" + table)
             .queryParam(idCol, "eq." + idVal);
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(data, getHeaders());
@@ -72,6 +74,7 @@ public class SupabaseService {
     }
 
     public void delete(String table, String idCol, Object idVal) throws Exception {
+        if (supabaseUrl == null || supabaseUrl.isBlank()) return;
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(supabaseUrl + "/rest/v1/" + table)
             .queryParam(idCol, "eq." + idVal);
         HttpEntity<String> entity = new HttpEntity<>(getHeaders());

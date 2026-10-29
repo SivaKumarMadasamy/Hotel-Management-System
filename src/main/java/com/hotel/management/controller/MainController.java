@@ -65,6 +65,35 @@ public class MainController {
         return "rooms";
     }
 
+    @GetMapping("/seed_rooms")
+    public String seedRooms(HttpSession session, RedirectAttributes redirect) {
+        if (!isLoggedIn(session) || !"admin".equals(session.getAttribute("role"))) {
+            return "redirect:/rooms";
+        }
+        try {
+            int added = 0;
+            for (int i = 1; i <= 20; i++) {
+                String roomNum = String.valueOf(i);
+                List<Map<String, Object>> existing = supabase.select("rooms", Map.of("room_number", roomNum), null, false);
+                if (existing == null || existing.isEmpty()) {
+                    String type = (i <= 5) ? "Single" : (i <= 10) ? "Double" : (i <= 16) ? "Deluxe" : "Suite";
+                    double price = (i <= 5) ? 2500.0 : (i <= 10) ? 4500.0 : (i <= 16) ? 7500.0 : 15000.0;
+                    Map<String, Object> room = new HashMap<>();
+                    room.put("room_number", roomNum);
+                    room.put("room_type", type);
+                    room.put("price", price);
+                    room.put("status", "Available");
+                    supabase.insert("rooms", room);
+                    added++;
+                }
+            }
+            redirect.addFlashAttribute("success", added > 0 ? "Successfully added " + added + " rooms (No. 1 to 20)!" : "Rooms No. 1 to 20 already exist in the system!");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("danger", "Error seeding rooms: " + e.getMessage());
+        }
+        return "redirect:/rooms";
+    }
+
     @GetMapping("/add_room")
     public String addRoomPage(HttpSession session) {
         if (!isLoggedIn(session)) return "redirect:/login";
