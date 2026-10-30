@@ -338,14 +338,34 @@ public class MainController {
     @GetMapping("/complaints")
     public String complaints(HttpSession session, Model model) {
         if (!isLoggedIn(session)) return "redirect:/login";
-        if (!"admin".equals(session.getAttribute("role"))) return "redirect:/";
-        model.addAttribute("complaints", supabase.select("complaints", null, "created_at", true));
+        
+        String role = (String) session.getAttribute("role");
+        String username = (String) session.getAttribute("username");
+        
+        List<Map<String, Object>> allComplaints = supabase.select("complaints", null, "created_at", true);
+        List<Map<String, Object>> filtered = new ArrayList<>();
+        
+        if (allComplaints != null) {
+            for (Map<String, Object> c : allComplaints) {
+                if ("admin".equals(role)) {
+                    filtered.add(c);
+                } else {
+                    String cUser = c.get("customer_name") != null ? String.valueOf(c.get("customer_name")).trim() : "";
+                    if (username != null && !username.isBlank() && username.trim().equalsIgnoreCase(cUser)) {
+                        filtered.add(c);
+                    }
+                }
+            }
+        }
+        model.addAttribute("complaints", filtered);
         return "complaints";
     }
 
     @GetMapping("/add_complaint")
-    public String addComplaintPage(HttpSession session) {
+    public String addComplaintPage(HttpSession session, Model model) {
         if (!isLoggedIn(session)) return "redirect:/login";
+        List<Map<String, Object>> rooms = supabase.select("rooms", null, "room_number", false);
+        model.addAttribute("rooms", rooms);
         return "add_complaint";
     }
 
@@ -354,14 +374,22 @@ public class MainController {
                                @RequestParam String complaint, HttpSession session, RedirectAttributes redirect) {
         if (!isLoggedIn(session)) return "redirect:/login";
         try {
+            String role = (String) session.getAttribute("role");
+            String username = (String) session.getAttribute("username");
+            
+            // For customers, ensure customer_name matches their logged-in username
+            if (!"admin".equals(role) && username != null && !username.isBlank()) {
+                customer_name = username.trim();
+            }
+            
             Map<String, Object> data = new HashMap<>();
             data.put("customer_name", customer_name);
             data.put("room_number", room_number);
             data.put("complaint", complaint);
             data.put("status", "Pending");
             supabase.insert("complaints", data);
-            redirect.addFlashAttribute("success", "Complaint submitted successfully! We will look into it.");
-            return "redirect:/rooms";
+            redirect.addFlashAttribute("success", "Complaint submitted successfully! It is now displayed in the list below.");
+            return "redirect:/complaints";
         } catch (Exception e) {
             redirect.addFlashAttribute("danger", "Error submitting complaint: " + e.getMessage());
             return "redirect:/add_complaint";
@@ -372,12 +400,57 @@ public class MainController {
     public String updateComplaint(@PathVariable int id, @RequestParam String status, 
                                   HttpSession session, RedirectAttributes redirect) {
         if (!isLoggedIn(session)) return "redirect:/login";
-        if (!"admin".equals(session.getAttribute("role"))) return "redirect:/";
         try {
+            String role = (String) session.getAttribute("role");
+            String username = (String) session.getAttribute("username");
+            
+            List<Map<String, Object>> complaints = supabase.select("complaints", Map.of("id", String.valueOf(id)), null, false);
+            if (complaints == null || complaints.isEmpty()) {
+                redirect.addFlashAttribute("danger", "Complaint not found.");
+                return "redirect:/complaints";
+            }
+            
+            Map<String, Object> c = complaints.get(0);
+            String cOwner = c.get("customer_name") != null ? String.valueOf(c.get("customer_name")).trim() : "";
+            
+            boolean canUpdate = "admin".equals(role) || (username != null && username.trim().equalsIgnoreCase(cOwner));
+            if (!canUpdate) {
+                redirect.addFlashAttribute("danger", "You are not authorized to update this complaint.");
+                return "redirect:/complaints";
+            }
+            
             supabase.update("complaints", "id", id, Map.of("status", status));
-            redirect.addFlashAttribute("success", "Complaint status updated!");
+            redirect.addFlashAttribute("success", "Complaint status updated to " + status + "!");
         } catch (Exception e) {
             redirect.addFlashAttribute("danger", "Error: " + e.getMessage());
+        }
+        return "redirect:/complaints";
+    }
+
+    @PostMapping("/delete_complaint/{id}")
+    public String deleteComplaint(@PathVariable int id, HttpSession session, RedirectAttributes redirect) {
+        if (!isLoggedIn(session)) return "redirect:/login";
+        try {
+            String role = (String) session.getAttribute("role");
+            String username = (String) session.getAttribute("username");
+            
+            List<Map<String, Object>> complaints = supabase.select("complaints", Map.of("id", String.valueOf(id)), null, false);
+            if (complaints != null && !complaints.isEmpty()) {
+                Map<String, Object> c = complaints.get(0);
+                String cOwner = c.get("customer_name") != null ? String.valueOf(c.get("customer_name")).trim() : "";
+                
+                boolean canDelete = "admin".equals(role) || (username != null && username.trim().equalsIgnoreCase(cOwner));
+                if (canDelete) {
+                    supabase.delete("complaints", "id", id);
+                    redirect.addFlashAttribute("success", "Complaint removed successfully!");
+                } else {
+                    redirect.addFlashAttribute("danger", "You are not authorized to delete this complaint.");
+                }
+            } else {
+                redirect.addFlashAttribute("danger", "Complaint not found.");
+            }
+        } catch (Exception e) {
+            redirect.addFlashAttribute("danger", "Error deleting complaint: " + e.getMessage());
         }
         return "redirect:/complaints";
     }

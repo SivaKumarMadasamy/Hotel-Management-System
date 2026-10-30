@@ -10,12 +10,21 @@
     <form th:action="@{/add_complaint}" method="POST">
         <div class="form-group">
             <label for="customer_name">Your Name</label>
-            <input type="text" id="customer_name" name="customer_name" placeholder="Enter your full name" required>
+            <input type="text" id="customer_name" name="customer_name"
+                   th:value="${session.username != null ? session.username : ''}"
+                   th:readonly="${session.role != 'admin'}"
+                   placeholder="Enter your full name" required>
         </div>
 
         <div class="form-group">
             <label for="room_number">Room Number</label>
-            <input type="text" id="room_number" name="room_number" placeholder="e.g. 101" required>
+            <select id="room_number" name="room_number" required th:if="${rooms != null and not #lists.isEmpty(rooms)}">
+                <option value="" disabled selected>-- Select Room Number --</option>
+                <option th:each="r : ${rooms}" th:value="${r.room_number}">
+                    Room [[${r.room_number}]] - [[${r.room_type}]]
+                </option>
+            </select>
+            <input type="text" id="room_number_text" name="room_number" placeholder="e.g. 101" required th:if="${rooms == null or #lists.isEmpty(rooms)}">
         </div>
 
         <div class="form-group">
@@ -23,7 +32,10 @@
             <textarea id="complaint" name="complaint" rows="5" required placeholder="Please describe your issue in detail..."></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
+        <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin-top:1.5rem;">
+            <button type="submit" class="btn btn-primary" style="flex:1;"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
+            <a th:href="@{/complaints}" class="btn btn-secondary"><i class="fas fa-list"></i> View Complaints</a>
+        </div>
     </form>
 </div>
 </div>

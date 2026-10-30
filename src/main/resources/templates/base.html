@@ -28,8 +28,8 @@
             <th:block th:if="${session.user_id != null}">
                 <th:block th:if="${session.role == 'admin'}">
                     <li><a th:href="@{/dashboard}"><i class="fas fa-chart-line"></i> Admin Dashboard</a></li>
-                    <li><a th:href="@{/complaints}"><i class="fas fa-comment-dots"></i> Complaints</a></li>
                 </th:block>
+                <li><a th:href="@{/complaints}"><i class="fas fa-comment-dots"></i> <span th:text="${session.role == 'admin' ? 'Complaints' : 'My Complaints'}">Complaints</span></a></li>
                 <li><a th:href="@{/rooms}"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a th:href="@{/bookings}" th:text="${session.role == 'admin' ? 'All Bookings' : 'My Bookings'}">Bookings</a></li>
                 <li><a th:href="@{/logout}" style="color: #f87171;"><i class="fas fa-sign-out-alt"></i> Logout ([[${session.username}]])</a></li>
