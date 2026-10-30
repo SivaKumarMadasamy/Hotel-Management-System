@@ -400,22 +400,15 @@ public class MainController {
     public String updateComplaint(@PathVariable int id, @RequestParam String status, 
                                   HttpSession session, RedirectAttributes redirect) {
         if (!isLoggedIn(session)) return "redirect:/login";
+        String role = (String) session.getAttribute("role");
+        if (!"admin".equals(role)) {
+            redirect.addFlashAttribute("danger", "Only administrators can update complaint resolution status.");
+            return "redirect:/complaints";
+        }
         try {
-            String role = (String) session.getAttribute("role");
-            String username = (String) session.getAttribute("username");
-            
             List<Map<String, Object>> complaints = supabase.select("complaints", Map.of("id", String.valueOf(id)), null, false);
             if (complaints == null || complaints.isEmpty()) {
                 redirect.addFlashAttribute("danger", "Complaint not found.");
-                return "redirect:/complaints";
-            }
-            
-            Map<String, Object> c = complaints.get(0);
-            String cOwner = c.get("customer_name") != null ? String.valueOf(c.get("customer_name")).trim() : "";
-            
-            boolean canUpdate = "admin".equals(role) || (username != null && username.trim().equalsIgnoreCase(cOwner));
-            if (!canUpdate) {
-                redirect.addFlashAttribute("danger", "You are not authorized to update this complaint.");
                 return "redirect:/complaints";
             }
             

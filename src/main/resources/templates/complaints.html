@@ -46,8 +46,8 @@
                 </span>
             </td>
             <td data-label="Available Options" class="action-buttons">
-                <!-- Status Options Selector -->
-                <form th:action="@{/update_complaint/{id}(id=${complaint.id})}" method="POST" style="display:inline-flex; align-items:center;">
+                <!-- Status Options Selector (Admin Only) -->
+                <form th:if="${session.role == 'admin'}" th:action="@{/update_complaint/{id}(id=${complaint.id})}" method="POST" style="display:inline-flex; align-items:center;">
                     <select name="status" onchange="this.form.submit()" class="status-select" title="Change resolution status">
                         <option value="Pending"     th:selected="${complaint.status == 'Pending'}">Pending</option>
                         <option value="In Progress" th:selected="${complaint.status == 'In Progress'}">In Progress</option>
@@ -55,9 +55,11 @@
                     </select>
                 </form>
 
-                <!-- Delete / Remove Option -->
+                <!-- Delete / Withdraw Option (Admin or Complaint Owner) -->
                 <form th:action="@{/delete_complaint/{id}(id=${complaint.id})}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove this complaint?');">
-                    <button type="submit" class="btn-small btn-danger" title="Remove Complaint"><i class="fas fa-trash"></i> Delete</button>
+                    <button type="submit" class="btn-small btn-danger" title="Remove Complaint">
+                        <i class="fas fa-trash"></i> <span th:text="${session.role == 'admin' ? 'Delete' : 'Withdraw'}">Delete</span>
+                    </button>
                 </form>
             </td>
         </tr>
