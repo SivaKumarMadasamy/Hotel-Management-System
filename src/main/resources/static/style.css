@@ -1266,8 +1266,25 @@ textarea { resize: vertical; min-height: 100px; }
 /* --- Status select (complaints) ------------------------- */
 .status-select {
     width: auto;
-    padding: 0.35rem 0.7rem;
-    font-size: 0.82rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: #0d2137;
+    border: 1px solid rgba(201, 168, 76, 0.45);
+    border-radius: var(--radius-sm);
+    color: var(--gold-light);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.status-select:focus,
+.status-select:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
+}
+.status-select option {
+    background-color: #0d2137;
+    color: #f0e6cc;
+    padding: 0.5rem 0.8rem;
 }
 
 /* --- Text helpers --------------------------------------- */
