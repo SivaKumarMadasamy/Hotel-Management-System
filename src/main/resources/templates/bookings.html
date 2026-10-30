@@ -25,23 +25,23 @@
     <tbody>
         <th:block th:each="booking : ${bookings}">
         <tr>
-            <td>
+            <td data-label="Customer">
                 <strong>[[${booking.customer_name}]]</strong><br>
                 <small class="text-muted">[[${booking.phone}]]</small>
             </td>
-            <td>
+            <td data-label="Room">
                 [[${booking.rooms != null ? booking.rooms.get('room_number') : 'Deleted'}]]
                 <small class="text-muted">([[${booking.rooms != null ? booking.rooms.get('room_type') : 'Unknown'}]])</small>
             </td>
-            <td>[[${booking.check_in}]]</td>
-            <td>[[${booking.check_out}]]</td>
-            <td><strong>Rs.[[${booking.total_price != null ? #numbers.formatDecimal(booking.total_price, 1, 2) : '0.00'}]]</strong></td>
-            <td>
+            <td data-label="Check-in">[[${booking.check_in}]]</td>
+            <td data-label="Check-out">[[${booking.check_out}]]</td>
+            <td data-label="Total Price"><strong>Rs.[[${booking.total_price != null ? #numbers.formatDecimal(booking.total_price, 1, 2) : '0.00'}]]</strong></td>
+            <td data-label="Status">
                 <span th:class="${booking.status == 'Active' ? 'badge badge-success' : 'badge badge-secondary'}">
                     [[${booking.status}]]
                 </span>
             </td>
-            <td>
+            <td data-label="Actions">
                 <th:block th:if="${booking.status == 'Active'}">
                 <form th:action="@{/cancel_booking/{id}(id=${booking.id})}" method="POST" style="display: inline;" onsubmit="return confirm('Cancel this booking? Room will be made available again.');">
                     <button type="submit" class="btn-small btn-danger"><i class="fas fa-times-circle"></i> Cancel</button>

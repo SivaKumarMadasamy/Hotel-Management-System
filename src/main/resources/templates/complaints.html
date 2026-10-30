@@ -23,20 +23,20 @@
     <tbody>
         <th:block th:each="complaint : ${complaints}">
         <tr>
-            <td>
+            <td data-label="Date & Time">
                 <!-- Substring safely assuming standard ISO format e.g. 2026-09-27T10:15:30 -->
                 <span th:text="${complaint.created_at != null and complaint.created_at.length() >= 10 ? #strings.substring(complaint.created_at, 0, 10) : ''}"></span>
                 <small class="text-muted" th:text="${complaint.created_at != null and complaint.created_at.length() >= 16 ? #strings.substring(complaint.created_at, 11, 16) : ''}"></small>
             </td>
-            <td>[[${complaint.customer_name}]]</td>
-            <td><strong>[[${complaint.room_number}]]</strong></td>
-            <td style="max-width: 280px; word-break: break-word;">[[${complaint.complaint}]]</td>
-            <td>
+            <td data-label="Customer">[[${complaint.customer_name}]]</td>
+            <td data-label="Room #"><strong>[[${complaint.room_number}]]</strong></td>
+            <td data-label="Description" style="max-width: 280px; word-break: break-word;">[[${complaint.complaint}]]</td>
+            <td data-label="Status">
                 <span th:class="${complaint.status == 'Pending' ? 'badge badge-danger' : (complaint.status == 'In Progress' ? 'badge badge-warning' : 'badge badge-success')}">
                     [[${complaint.status}]]
                 </span>
             </td>
-            <td>
+            <td data-label="Action">
                 <form th:action="@{/update_complaint/{id}(id=${complaint.id})}" method="POST">
                     <select name="status" onchange="this.form.submit()" class="status-select">
                         <option value="Pending"     th:selected="${complaint.status == 'Pending'}">Pending</option>

@@ -9,6 +9,7 @@
    CSS Custom Properties
    ---------------------------------------------------------- */
 :root {
+    color-scheme: dark;
     --navy-deep:    #0a1628;
     --navy-mid:     #0d2137;
     --navy-light:   #1a3a5c;
@@ -46,10 +47,13 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -61,6 +65,8 @@ body {
     color: var(--text-primary);
     min-height: 100vh;
     line-height: 1.6;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 /* ----------------------------------------------------------
@@ -155,19 +161,39 @@ a:hover { color: var(--gold-light); }
 .nav-toggle {
     display: none;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    padding: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition);
+}
+.nav-toggle:hover, .nav-toggle:active {
+    background: var(--gold-muted);
 }
 .nav-toggle span {
     display: block;
     width: 24px;
-    height: 2px;
+    height: 2.5px;
     background: var(--gold);
     border-radius: 2px;
-    transition: all var(--transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+.nav-toggle.active span:nth-child(1) {
+    transform: translateY(7.5px) rotate(45deg);
+}
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.nav-toggle.active span:nth-child(3) {
+    transform: translateY(-7.5px) rotate(-45deg);
 }
 
 /* ----------------------------------------------------------
@@ -933,7 +959,7 @@ footer .gold { color: var(--gold); }
 }
 
 /* ----------------------------------------------------------
-   Responsive
+   Responsive (Desktop & Tablet Breakpoints)
    ---------------------------------------------------------- */
 @media (max-width: 900px) {
     .booking-layout {
@@ -942,49 +968,6 @@ footer .gold { color: var(--gold); }
     .booking-summary-card {
         position: static;
     }
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0.8rem 1.2rem;
-        flex-wrap: wrap;
-    }
-
-    .nav-toggle { display: flex; }
-
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        padding: 1rem 0;
-        gap: 0.1rem;
-        border-top: 1px solid var(--gold-muted);
-        margin-top: 0.6rem;
-    }
-    .nav-links.open { display: flex; }
-    .nav-links li a { padding: 0.65rem 1rem; }
-
-    .hero { padding: 4rem 1.2rem 3rem; }
-
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-
-    .page-header { flex-direction: column; align-items: flex-start; }
-
-    .rooms-grid { grid-template-columns: 1fr; }
-
-    .form-wrapper { padding: 1.8rem 1.4rem; margin: 1.5rem auto; }
-
-    .auth-card { padding: 2rem 1.5rem; }
-
-    table { font-size: 0.82rem; }
-    thead th, tbody td { padding: 0.7rem 0.8rem; }
-}
-
-@media (max-width: 480px) {
-    .stats-grid { grid-template-columns: 1fr; }
-    .hero h1 { font-size: 2rem; }
-    .btn { font-size: 0.84rem; padding: 0.65rem 1.4rem; }
-    .features-grid { grid-template-columns: 1fr; }
 }
 
 /* ==========================================================
@@ -1046,10 +1029,18 @@ textarea {
     border: 1px solid rgba(201, 168, 76, 0.25);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 16px;
     font-family: 'Inter', sans-serif;
     transition: border-color var(--transition), box-shadow var(--transition);
     outline: none;
+    min-height: 46px;
+    box-sizing: border-box;
+}
+input[type="date"] {
+    color-scheme: dark;
+}
+select {
+    color-scheme: dark;
 }
 input[type="text"]:focus,
 input[type="email"]:focus,
@@ -1654,3 +1645,418 @@ small.text-muted { display: block; font-size: 0.78rem; color: var(--text-muted);
 .room-card-photo[data-room-number="18"] { background-image: url('https://images.unsplash.com/photo-1617098900591-3f90928e8c54?w=600&q=80'); }
 .room-card-photo[data-room-number="19"] { background-image: url('https://images.unsplash.com/photo-1631049552057-403cdb8f0658?w=600&q=80'); }
 .room-card-photo[data-room-number="20"] { background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80'); }
+
+/* ==========================================================
+   MASTER MOBILE RESPONSIVE SYSTEM
+   Ensures flawless UX on phones, tablets, and small viewports
+   ========================================================== */
+
+@media (max-width: 768px) {
+    /* --- General Viewport & Container --- */
+    .container {
+        padding: 1.2rem 1rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .page-header > div:last-child {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .page-header .btn {
+        flex: 1 1 auto;
+        justify-content: center;
+        min-height: 44px;
+    }
+
+    /* --- Mobile Navigation Bar & Drawer --- */
+    .navbar {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .navbar .logo a {
+        font-size: 1.25rem;
+        gap: 0.45rem;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: rgba(10, 22, 40, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 0.75rem;
+        margin-top: 0.75rem;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+        gap: 0.4rem;
+        align-items: stretch;
+    }
+
+    .nav-links.open {
+        display: flex;
+        animation: slideDown 0.25s ease forwards;
+    }
+
+    .nav-links li {
+        width: 100%;
+        list-style: none;
+    }
+
+    .nav-links li a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.85rem 1rem;
+        width: 100%;
+        border-radius: var(--radius-sm);
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid transparent;
+        min-height: 44px;
+        box-sizing: border-box;
+    }
+
+    .nav-links li a:active,
+    .nav-links li a:hover {
+        background: var(--gold-muted);
+        border-color: rgba(201, 168, 76, 0.4);
+        color: var(--gold-light);
+    }
+
+    /* --- Homepage Hero & Feature Sections --- */
+    .home-hero {
+        padding: 3.5rem 1rem 2.5rem;
+    }
+
+    .home-hero h1 {
+        font-size: clamp(2rem, 7.5vw, 2.7rem);
+    }
+
+    .home-hero p {
+        font-size: 0.95rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .home-hero-btns {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+
+    .home-hero-btns .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem 1.4rem;
+        font-size: 0.95rem;
+    }
+
+    .stats-strip {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 1.4rem 1rem;
+    }
+
+    .strip-stat .val {
+        font-size: 1.65rem;
+    }
+
+    .featured-grid {
+        grid-template-columns: 1fr;
+        gap: 1.4rem;
+    }
+
+    .features-strip {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 2rem 0;
+    }
+
+    .cta-banner {
+        padding: 2.2rem 1.2rem;
+    }
+
+    .cta-banner-btns {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+
+    .cta-banner-btns .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* --- Rooms Grid & Cards --- */
+    .rooms-grid {
+        grid-template-columns: 1fr;
+        gap: 1.4rem;
+    }
+
+    .room-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .room-card-photo {
+        height: 200px;
+    }
+
+    .room-card-body {
+        padding: 1.2rem 1.1rem;
+    }
+
+    .room-price-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .room-card-price {
+        font-size: 1.4rem;
+    }
+
+    .room-admin-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .room-admin-row .btn,
+    .room-admin-row form,
+    .room-admin-row form button {
+        width: 100%;
+        justify-content: center;
+        min-height: 42px;
+    }
+
+    /* --- Responsive Tables Converted to Native Mobile Cards --- */
+    .table-wrapper {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        overflow: visible;
+        width: 100%;
+    }
+
+    .data-table {
+        background: transparent;
+        border: none;
+    }
+
+    .data-table thead {
+        display: none;
+    }
+
+    .data-table,
+    .data-table tbody,
+    .data-table tr,
+    .data-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .data-table tr {
+        background: var(--navy-card);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        margin-bottom: 1.2rem;
+        padding: 0.85rem 1rem;
+        box-shadow: var(--glass-shadow);
+    }
+
+    .data-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.65rem 0;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+        text-align: right;
+        font-size: 0.88rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .data-table td:last-child {
+        border-bottom: none;
+        padding-top: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    .data-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold);
+        text-align: left;
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    .data-table td strong {
+        font-size: 0.92rem;
+    }
+
+    .status-select {
+        width: 100%;
+        min-height: 42px;
+        font-size: 16px;
+    }
+
+    .action-buttons {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    /* --- Mobile Form Containers --- */
+    .form-wrapper,
+    .form-container,
+    .auth-card {
+        padding: 1.4rem 1.1rem !important;
+        margin: 1rem auto !important;
+        border-radius: var(--radius-lg);
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+
+    .price-estimate {
+        padding: 1rem;
+    }
+
+    .form-actions .btn,
+    .auth-btn {
+        width: 100%;
+        min-height: 48px;
+        font-size: 1rem;
+        justify-content: center;
+    }
+
+    input, select, textarea {
+        font-size: 16px !important;
+        min-height: 46px;
+    }
+
+    /* --- Admin Dashboard --- */
+    .dashboard-header {
+        margin-bottom: 1.2rem;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .dashboard-stats .stat-card {
+        padding: 1rem 0.8rem;
+        gap: 0.6rem;
+    }
+
+    .dashboard-stats .stat-card i {
+        font-size: 1.6rem;
+    }
+
+    .dashboard-stats .stat-details h3 {
+        font-size: 0.72rem;
+    }
+
+    .dashboard-stats .stat-details p {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+    }
+
+    .dashboard-actions .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.85rem 1rem;
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem 0.75rem;
+    }
+
+    .navbar {
+        padding: 0.7rem 0.8rem;
+    }
+
+    .home-hero {
+        padding: 2.8rem 0.8rem 2rem;
+    }
+
+    .home-hero h1 {
+        font-size: 1.95rem;
+    }
+
+    .btn {
+        font-size: 0.88rem;
+        padding: 0.75rem 1.2rem;
+    }
+
+    footer {
+        padding: 1.5rem 1rem;
+        margin-top: 2rem;
+    }
+
+    .alert {
+        font-size: 0.84rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-strip {
+        grid-template-columns: 1fr;
+    }
+}
